@@ -1,0 +1,26 @@
+{
+  "name": "plv.js",
+  "version": "1.0.0",
+  "description": "Production Line Visualisation framework for JavaScript.",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "git+https://github.com/MiroslavJelaska/plv.js.git",
+  "keywords": [
+    "production",
+    "line",
+    "visualisation",
+    "framework",
+    "javascript",
+    "js",
+    "opensource",
+    "graph"
+  ],
+  "author": "Miroslav Jelaska <jelaska.miro@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/MiroslavJelaska/plv.js/issues"
+  },
+  "homepage": "https://github.com/MiroslavJelaska/plv.js#readme"
+}
