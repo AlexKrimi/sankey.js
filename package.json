@@ -18,7 +18,7 @@
     "graph"
   ],
   "author": "Miroslav Jelaska <jelaska.miro@gmail.com>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/MiroslavJelaska/plv.js/issues"
   },
