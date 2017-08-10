@@ -1,0 +1,31 @@
+{
+  "name": "plv.js",
+  "description": "Production Line Visualisation framework for JavaScript.",
+  "main": "",
+  "license": "MIT",
+  "keywords": [
+    "production",
+    "line",
+    "visualisation",
+    "framework",
+    "javascript",
+    "js",
+    "opensource",
+    "graph"
+  ],
+  "homepage": "https://github.com/MiroslavJelaska/plv.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "js/bower_components",
+    "test",
+    "tests"
+  ],
+  "authors": [
+    "Miroslav Jelaska <jelaska.miro@gmail.com>"
+  ],
+  "dependencies": {
+    "mxgraph": "^3.7.4"
+  }
+}
