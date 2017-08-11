@@ -1,12 +1,10 @@
-'use strict';
 
 (function(mxUtils, mxBufferShape){
-    const efficiencyLevelToSvgHref = {
+        const efficiencyLevelToSvgHref = {
         low:      '#buffer-low',
         moderate: '#buffer-moderate',
         high:     '#buffer-high'
     }
-
     function mxBufferShape(bounds, fill, stroke, strokewidth){
         mxShape.call(this);
         this.bounds = bounds;

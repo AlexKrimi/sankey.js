@@ -1,4 +1,9 @@
-'use strict';
+import applyDummyGraph from './applyDummyGraph.js';
+import './mxGraphShapeExtensions/mxBufferShape.js';
+import './mxGraphShapeExtensions/mxCyclicStationShape.js';
+import './mxGraphShapeExtensions/mxDrainShape.js';
+import './mxGraphShapeExtensions/mxSourceShape.js';
+import './mxGraphShapeExtensions/mxStationShape.js';
 
 (function(pieChart, applyDummyGraph){
     window.onload = function(){
@@ -23,7 +28,7 @@ function main(container, renderDummyGraph) {
     graph.container.style.backgroundColor = 'white';
     graph.setEnabled(false); // Makes the graph read-only
     graph.setCellsEditable(false); // Disables basic selection and cell handling
-    
+
     var layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
     layout.intraCellSpacing = 60; // The spacing buffer added between cells on the same layer.  Default is 30.
     layout.interRankCellSpacing = 50; // The spacing buffer added between cell on adjacent layers.  Default is 50.
@@ -39,7 +44,7 @@ function main(container, renderDummyGraph) {
         {
             if (change != null)
                 change(graph, model, parent);
-            
+
             layout.execute(graph.getDefaultParent());
         }
         catch (exception)

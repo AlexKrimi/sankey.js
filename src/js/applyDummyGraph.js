@@ -1,6 +1,5 @@
-'use strict';
 
-function applyDummyGraph(graph, model, parent){
+export default function (graph, model, parent){
     function createVertex(x, y, shapeDefinition){
         return graph.insertVertex(parent, null, null, null, null, x, y, shapeDefinition);
     }
@@ -24,7 +23,7 @@ function applyDummyGraph(graph, model, parent){
     }
     var source = createVertex(30, 30, 'shape=mxgraph.custom.source;');
     var drain = createVertex(30, 30, 'shape=mxgraph.custom.drain;');
-    
+
     var s1 = createStation('1STAR-0A', 'high;', '90%');
     var s2 = createStation('2STAR-06', 'high;', '90%');
     var s3 = createStation('3FA01','high;', '90%');
@@ -62,7 +61,7 @@ function applyDummyGraph(graph, model, parent){
                 [s5, conv2],
                 [s6, conv2],
             [conv2, s7],
-            
+
             [div1, s8],
             [s8, buffer2],
             [buffer2, s9],
@@ -71,7 +70,7 @@ function applyDummyGraph(graph, model, parent){
 
             [s7, conv1],
             [s11, conv1],
-        
+
         [conv1, buffer3],
         [buffer3, s12],
         [s12, s13],
