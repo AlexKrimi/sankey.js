@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,11 +70,26 @@
 "use strict";
 
 
-var _applyDummyGraph = __webpack_require__(1);
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var EfficiencyLevel = new Enumeration({
+	1: 'Low',
+	2: 'Medium',
+	3: 'High'
+});
+exports.default = EfficiencyLevel;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _applyDummyGraph = __webpack_require__(2);
 
 var _applyDummyGraph2 = _interopRequireDefault(_applyDummyGraph);
-
-__webpack_require__(2);
 
 __webpack_require__(3);
 
@@ -84,11 +99,24 @@ __webpack_require__(5);
 
 __webpack_require__(6);
 
+__webpack_require__(7);
+
+var _EfficiencyLevel = __webpack_require__(0);
+
+var _EfficiencyLevel2 = _interopRequireDefault(_EfficiencyLevel);
+
+var _ProductionLineModel = __webpack_require__(8);
+
+var _ProductionLineModel2 = _interopRequireDefault(_ProductionLineModel);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function (pieChart, applyDummyGraph) {
     window.onload = function () {
         main(document.getElementById('graphContainer'), applyDummyGraph);
+        var productionModel = new _ProductionLineModel2.default();
+
+        console.log(productionModel.AddStation('hoho', _EfficiencyLevel2.default.Low, '90%'));
     };
 })(window.pieChart, _applyDummyGraph2.default);
 
@@ -135,7 +163,7 @@ function main(container, renderDummyGraph) {
 };
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -204,7 +232,7 @@ exports.default = function (graph, model, parent) {
 };
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -258,7 +286,7 @@ exports.default = function (graph, model, parent) {
 })(window.mxUtils, window.mxBufferShape);
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -322,7 +350,7 @@ exports.default = function (graph, model, parent) {
 })(mxUtils);
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -354,7 +382,7 @@ exports.default = function (graph, model, parent) {
 })();
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -386,7 +414,7 @@ exports.default = function (graph, model, parent) {
 })();
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -448,6 +476,78 @@ exports.default = function (graph, model, parent) {
 
     mxCellRenderer.prototype.defaultShapes['mxgraph.custom.station'] = mxStationShape;
 })();
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Station = __webpack_require__(9);
+
+var _Station2 = _interopRequireDefault(_Station);
+
+var _EfficiencyLevel = __webpack_require__(0);
+
+var _EfficiencyLevel2 = _interopRequireDefault(_EfficiencyLevel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ProductionLineModel = function () {
+    function ProductionLineModel() {
+        _classCallCheck(this, ProductionLineModel);
+
+        this.verteces = [];
+        this.edges = [];
+    }
+
+    _createClass(ProductionLineModel, [{
+        key: 'AddStation',
+        value: function AddStation(title, efficiencyLevel, efficiencyRelativeAmount) {
+            var newVertex = new _Station2.default('Station 1', _EfficiencyLevel2.default.low, '100%');
+            this.verteces.push(newVertex);
+            return newVertex;
+        }
+    }]);
+
+    return ProductionLineModel;
+}();
+
+exports.default = ProductionLineModel;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Station = function Station(title, efficiencyLevel, efficiencyRelativeAmount) {
+    _classCallCheck(this, Station);
+
+    this.title = title;
+    this.efficiencyLevel = efficiencyLevel;
+    this.efficiencyRelativeAmount = efficiencyRelativeAmount;
+    this.incoming = [];
+    this.outcoming = [];
+};
+
+exports.default = Station;
 
 /***/ })
 /******/ ]);

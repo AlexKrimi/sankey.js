@@ -4,10 +4,13 @@ import './mxGraphShapeExtensions/mxCyclicStationShape.js';
 import './mxGraphShapeExtensions/mxDrainShape.js';
 import './mxGraphShapeExtensions/mxSourceShape.js';
 import './mxGraphShapeExtensions/mxStationShape.js';
+import EfficiencyLevel from './plv/EfficiencyLevel.js';
+import ProductionLineModel from './plv/ProductionLineModel.js';
 
 (function(pieChart, applyDummyGraph){
     window.onload = function(){
         main(document.getElementById('graphContainer'), applyDummyGraph);
+        let productionModel = new ProductionLineModel();
     }
 })(window.pieChart, applyDummyGraph);
 
