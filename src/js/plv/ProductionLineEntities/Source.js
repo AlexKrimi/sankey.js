@@ -1,5 +1,7 @@
-export default class Source {
-    constructor(outcomingVertex){
-        this.outcomingVertex = outcomingVertex;
+import EntityBase from './EntityBase.js'
+
+export default class Source extends EntityBase {
+    constructor(){
+        super();
     }
 }

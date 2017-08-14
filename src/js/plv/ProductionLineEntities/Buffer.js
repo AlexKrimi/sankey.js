@@ -1,9 +1,13 @@
-export default class Station {
-    constructor(title, efficiencyLevel, efficiencyRelativeAmount){
-        this.title = titel;
-        this.efficiencyLevel = efficiencyLevel;
-        this. efficiencyRelativeAmount = efficiencyRelativeAmount;
-        this.incoming = [];
-        this.outcoming = [];
+import EntityBase from './EntityBase.js'
+
+export default class Buffer extends EntityBase {
+    constructor(label, efficiencyLevel){
+        super();
+        console.log(efficiencyLevel);
+        this._label = label;
+        this._efficiencyLevel = efficiencyLevel;
     }
+
+    get label() { return this._label; }
+    get efficiencyLevel() { return this._efficiencyLevel; }
 }

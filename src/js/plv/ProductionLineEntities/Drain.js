@@ -1,5 +1,7 @@
-export default class Drain {
-    constructor(incomingVertex){
-        this.incomingVertex = incomingVertex;
+import EntityBase from './EntityBase.js'
+
+export default class Drain extends EntityBase {
+    constructor(){
+        super();
     }
 }

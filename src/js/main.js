@@ -4,6 +4,12 @@ import './mxGraphShapeExtensions/mxCyclicStationShape.js';
 import './mxGraphShapeExtensions/mxDrainShape.js';
 import './mxGraphShapeExtensions/mxSourceShape.js';
 import './mxGraphShapeExtensions/mxStationShape.js';
+
+import Buffer from './plv/ProductionLineEntities/Buffer.js';
+import Drain from './plv/ProductionLineEntities/Drain.js';
+import Source from './plv/ProductionLineEntities/Source.js';
+import Station from './plv/ProductionLineEntities/Station.js';
+
 import EfficiencyLevel from './plv/EfficiencyLevel.js';
 import ProductionLineModel from './plv/ProductionLineModel.js';
 
@@ -11,6 +17,13 @@ import ProductionLineModel from './plv/ProductionLineModel.js';
     window.onload = function(){
         main(document.getElementById('graphContainer'), applyDummyGraph);
         let productionModel = new ProductionLineModel();
+        const bbb = EfficiencyLevel.Low;
+        console.log(bbb);
+        let a = new Buffer('Hoho', bbb);
+        productionModel.AddVertex(a);
+        console.log(a);
+        console.log(bbb);
+        a.should.be.a('string');
     }
 })(window.pieChart, applyDummyGraph);
 
