@@ -4,9 +4,3 @@
 
 .black { fill:#333; }
 .white { fill: #fff; }
-#graphContainer g path { stroke:#3F9AFF; stroke-width: 2.5px; }
-#graphContainer g path:nth-child(3n) { stroke: #004797; stroke-width: 1.5px; fill: #004797; }
-.divider { fill: none; stroke: gray; stroke-miterlimit: 10; stroke-width: 0.5px; }
-.color-arrowCap{fill:#004797;}
-
-.line-cyclic{fill:none;stroke-miterlimit:10; stroke:#3f9aff;stroke-width:3px;}

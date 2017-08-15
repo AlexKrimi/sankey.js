@@ -26,6 +26,5 @@
     "Miroslav Jelaska <jelaska.miro@gmail.com>"
   ],
   "dependencies": {
-    "mxgraph": "^3.7.4"
   }
 }
