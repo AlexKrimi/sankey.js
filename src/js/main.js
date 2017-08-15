@@ -17,13 +17,23 @@ import ProductionLineModel from './plv/ProductionLineModel.js';
     window.onload = function(){
         main(document.getElementById('graphContainer'), applyDummyGraph);
         let productionModel = new ProductionLineModel();
-        const bbb = EfficiencyLevel.Low;
-        console.log(bbb);
-        let a = new Buffer('Hoho', bbb);
+        let source = new Source();
+        let a = new Station('S1', EfficiencyLevel.High, '80%');
+        let b = new Buffer('Hoho', EfficiencyLevel.Low);
+        productionModel.AddVertex(source);
         productionModel.AddVertex(a);
-        console.log(a);
-        console.log(bbb);
-        a.should.be.a('string');
+        productionModel.AddVertex(b);
+
+        productionModel.AddEdges([
+            [source, a],
+            [a, b]
+        ]);
+
+        productionModel.AddEdges([
+            [source, a]
+        ]);
+
+        productionModel.IsValid();
     }
 })(window.pieChart, applyDummyGraph);
 
