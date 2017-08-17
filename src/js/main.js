@@ -23,6 +23,7 @@ window.onload = function(){
     const canvas =
     d3.select("body")
     .append("svg")
+    .attr("id", 'canvas')
     .attr("width", 1800)
     .attr("height", 1000);
 
@@ -37,12 +38,28 @@ window.onload = function(){
     .enter()
     .append("g");
 
+
+    var colorIterator = {
+        [Symbol.iterator](){
+            return {
+                next(){
+                    return {
+                        value: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
+                        done: false
+                    };
+                }
+            }
+        }
+    }
+    const color = colorIterator[Symbol.iterator]();
+
     const someShape01 = new StationShape('Station 1', EfficiencyLevel.Low, '0.5');
     someShape01.Render(canvas,
         {
             x: 0,
             y: 0
-        }
+        },
+        color.next().value
     );
 
     const someShape02 = new StationShape('Station B', EfficiencyLevel.High, '0.9');
@@ -50,7 +67,8 @@ window.onload = function(){
         {
             x: 150,
             y: 50
-        }
+        },
+        color.next().value
     );
 
     const someShape03 = new StationShape('Station B', EfficiencyLevel.High, '0.9');
@@ -58,8 +76,27 @@ window.onload = function(){
         {
             x: 1,
             y: 50
-        }
+        },
+        color.next().value
     );
+
+    d3
+    .xml("./src/images/station.svg")
+    .mimeType("image/svg+xml")
+    .get(function(error, xml) {
+        if (error) throw error;
+
+        document.body.appendChild(xml.documentElement);
+
+        d3
+        .select('#canvas')
+        .append('use')
+        .attr('href', '#station')
+        .attr('width', '75')
+        .attr('height', ' 68.05')
+        .attr('x', '200')
+        .attr('y', '200');
+    });
 
     // Lines
     var lineData1 = [

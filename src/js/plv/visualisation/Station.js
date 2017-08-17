@@ -14,15 +14,15 @@ export default class Station extends Shape {
     get width() { return 25; }
     get height() { return 100; }
 
-    Render(svg, startLocation){
-        svg
-        .selectAll('g')
+    Render(svg, startLocation, color){
+        d3
+        .select('#canvas')
         .append("g")
         .append('rect')
         .attr("x", startLocation.x)
         .attr("y", startLocation.y)
         .attr("width", this.width)
         .attr("height", this.height)
-        .style("fill", (d, i) => d.fill);
+        .style("fill", color);
     }
 }
