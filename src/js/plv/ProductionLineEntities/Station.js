@@ -7,7 +7,6 @@ export default class Station extends EntityBase {
         this._efficiencyLevel = efficiencyLevel;
         this._efficiencyRelativeAmountLabel = efficiencyRelativeAmountLabel;
     }
-
     get label() { return this._label; }
     get efficiencyLevel() { return this._efficiencyLevel; }
     get efficiencyRelativeAmountLabel() { return this._efficiencyRelativeAmountLabel; }
