@@ -1,15 +1,19 @@
-import Buffer from './plv/productionLineEntities/Buffer.js';
-import Drain from './plv/productionLineEntities/Drain.js';
-import Source from './plv/productionLineEntities/Source.js';
-import Station from './plv/productionLineEntities/Station.js';
-
 import EfficiencyLevel from './plv/EfficiencyLevel.js';
 import ProductionLineModel from './plv/ProductionLineModel.js';
+import generateDummyProductionLine from './generateDummyProductionLine.js';
 import StationShape from './plv/visualisation/Station.js';
 
 import renderGradients from './plv/util/renderGradients.js';
 
+function developingGraphBuilding(){
+    debugger;
+    const productionLine = generateDummyProductionLine();
+    const source = productionLine.source;
+}
+
 window.onload = function(){
+    developingGraphBuilding();
+
     var a = { title: 'A', position: {c:0, r:0}, fill: '#8fb239' },
         b = { title: 'B', position: {c:1, r:0}, fill: '#8fb239' },
         c = { title: 'C', position: {c:1, r:1}, fill: '#BE120C' };
@@ -75,7 +79,7 @@ window.onload = function(){
     someShape03.Render(canvas,
         {
             x: 1,
-            y: 50
+            y: 150
         },
         color.next().value
     );
