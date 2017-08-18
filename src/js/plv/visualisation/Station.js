@@ -6,13 +6,16 @@ export default class Station extends Shape {
         this._label = label;
         this._efficiencyLevel = efficiencyLevel;
         this._efficiencyRelativeAmountLabel = efficiencyRelativeAmountLabel;
+
+        this.__wVariance = Math.random()*50;
+        this.__hVariance = Math.random()*50;
     }
 
     get label() { return this._label; }
     get efficiencyLevel() { return this._efficiencyLevel; }
     get efficiencyRelativeAmountLabel() { return this._efficiencyRelativeAmountLabel; }
-    get width() { return 25; }
-    get height() { return 100; }
+    get width() { return 25 + this.__wVariance; }
+    get height() { return 100 + this.__hVariance; }
 
     Render(svg, startLocation, color){
         d3

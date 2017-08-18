@@ -1,4 +1,5 @@
 export default class ShapeBase{
-    Render(svg){
-    }
+    get width() { }
+    get height() { }
+    Render(svg){}
 }
