@@ -1,14 +1,15 @@
 import EfficiencyLevel from './plv/EfficiencyLevel.js';
 import ProductionLineModel from './plv/ProductionLineModel.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
+import fromProductionModelToVisualisationModel from './fromProductionModelToVisualisationModel.js';
 import StationShape from './plv/visualisation/Station.js';
 
 import renderGradients from './plv/util/renderGradients.js';
 
 function developingGraphBuilding(){
-    debugger;
     const productionLine = generateDummyProductionLine();
     const source = productionLine.source;
+    fromProductionModelToVisualisationModel(productionLine);
 }
 
 window.onload = function(){
