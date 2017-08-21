@@ -28,8 +28,8 @@ window.onload = function(){
     const rectHeight = 100;
     const windowMarginLeft = 50;
     const windowMarginTop = 50;
-    const elementMarginTop = 20;
-    const elementMarginLeft = 60;
+    const elementMarginTop = 80;
+    const elementMarginRight = 85;
 
     var g = canvas
     .selectAll('g')
@@ -66,33 +66,69 @@ window.onload = function(){
         [4, 5]
     ];
 
-    console.table(columnPartitions);
+    // console.table(columnPartitions);
 
-    let tColumnPartitions = transposeMatrix(columnPartitions);
-    console.table(tColumnPartitions);
+    let transposedColumnPartitions = transposeMatrix(columnPartitions);
     let yPosition = windowMarginTop;
     const columnTotalHeights = [];
-    const layoutedShapes = [];
-    for(let rowIndex = 0; rowIndex < tColumnPartitions.length; rowIndex++){
-        let xPosition = windowMarginLeft;
-        for(let columnIndex = 0; columnIndex < tColumnPartitions[rowIndex].length; columnIndex++){
-            if(tColumnPartitions[rowIndex][columnIndex] === null)
-                continue;
-            layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
-            const newShape = new StationShape(`Station (${rowIndex},${columnIndex})`, EfficiencyLevel.Low, '0.5');
-            newShape.SetLocation(xPosition, yPosition);
-            layoutedShapes[rowIndex].push(newShape);
-            columnTotalHeights[columnIndex] = (columnTotalHeights[columnIndex] || 0) + newShape.height;
-            xPosition = xPosition + Math.max(...layoutedShapes[rowIndex].map(x => x.width)) + elementMarginLeft;
+    const layoutedShapes =
+    transposedColumnPartitions.map(
+        column => column.map(
+            element => element && new StationShape(`Station`, EfficiencyLevel.Low, '0.5')
+        ));
+        console.table(layoutedShapes);
+
+    function getMaxWidthForColumn(columnIndex){
+        if(!layoutedShapes[0][columnIndex]){
+            debugger;
+            return 0;
         }
-        yPosition = yPosition + Math.max(...columnTotalHeights) + elementMarginTop;
+        var column = layoutedShapes.map(row => row[columnIndex]);
+        return Math.max(...column.map(element => element ? element.width : 0));
     }
-    console.table(layoutedShapes)
+
+    function getMaxHeightForRow(rowIndex){
+        if(!layoutedShapes[rowIndex])
+            return 0;
+        return Math.max(...layoutedShapes[rowIndex].map(element => element ? element.height : 0));
+    }
+
+    var alignVertically = true;
+    for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
+        let xPosition = windowMarginLeft;
+        for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
+            if(layoutedShapes[rowIndex][columnIndex] === null){
+                xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
+                continue;
+            }
+            const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
+            layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
+
+            if(alignVertically){
+                xPosition = xPosition + (getMaxWidthForColumn(columnIndex) - elementWidth)/2;
+            }
+            console.log(`columnIndex: ${columnIndex}, max width: ${getMaxWidthForColumn(columnIndex)}`)
+            layoutedShapes[rowIndex][columnIndex].SetLocation(xPosition, yPosition);
+
+            if(alignVertically){
+                xPosition = xPosition + (getMaxWidthForColumn(columnIndex) - elementWidth)/2 + elementWidth;
+            } else {
+                xPosition = xPosition + getMaxWidthForColumn(columnIndex);
+            }
+
+            xPosition = xPosition + elementMarginRight;
+        }
+        yPosition = yPosition + getMaxHeightForRow(rowIndex) + elementMarginTop;
+    }
+
+    // console.table(layoutedShapes)
     for(let row of layoutedShapes){
         for(let element of row){
-            element.Render(canvas);
+            element && element.Render(canvas);
         }
     }
+
+
 
     // const someShape01 = new StationShape('Station 1', EfficiencyLevel.Low, '0.5');
     // someShape01.Render(canvas,
