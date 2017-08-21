@@ -76,11 +76,10 @@ window.onload = function(){
         column => column.map(
             element => element && new StationShape(`Station`, EfficiencyLevel.Low, '0.5')
         ));
-        console.table(layoutedShapes);
+        // console.table(layoutedShapes);
 
     function getMaxWidthForColumn(columnIndex){
         if(!layoutedShapes[0][columnIndex]){
-            debugger;
             return 0;
         }
         var column = layoutedShapes.map(row => row[columnIndex]);
@@ -102,12 +101,27 @@ window.onload = function(){
                 continue;
             }
             const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
+
+            let lastNotNullElementInColumn = null;
+            for(var i = 0; i < layoutedShapes.length; i++){
+                if(!!layoutedShapes[i][columnIndex]){
+                    lastNotNullElementInColumn = layoutedShapes[i][columnIndex];
+                }
+            }
+            console.log('layoutedShapes[0][columnIndex].GetBoundingBox()', layoutedShapes[0][columnIndex].GetBoundingBox())
+            var columnElementBoundingBox = {
+                x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
+                y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
+                x2: lastNotNullElementInColumn.GetBoundingBox().x2,
+                y2: lastNotNullElementInColumn.GetBoundingBox().y2
+            };
+            //console.log('columnElementBoundingBox', columnElementBoundingBox);
             layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
 
             if(alignVertically){
                 xPosition = xPosition + (getMaxWidthForColumn(columnIndex) - elementWidth)/2;
             }
-            console.log(`columnIndex: ${columnIndex}, max width: ${getMaxWidthForColumn(columnIndex)}`)
+            //console.log(`columnIndex: ${columnIndex}, max width: ${getMaxWidthForColumn(columnIndex)}`)
             layoutedShapes[rowIndex][columnIndex].SetLocation(xPosition, yPosition);
 
             if(alignVertically){
@@ -120,6 +134,47 @@ window.onload = function(){
         }
         yPosition = yPosition + getMaxHeightForRow(rowIndex) + elementMarginTop;
     }
+
+    (function alighHorizontally(run){
+        if(!run) return;
+
+        const columnBoudingBoxes = [];
+        const numberOfRows = layoutedShapes.length;
+        const numberOfColumns = layoutedShapes[0].length;
+
+        for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
+            var columnElementBoundingBox = {
+                x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
+                y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
+                x2: null,
+                y2: null
+            };
+
+            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+                if(layoutedShapes[rowIndex][columnIndex] === null){
+                    continue;
+                }
+                columnElementBoundingBox.x2 = layoutedShapes[rowIndex][columnIndex].GetBoundingBox().x2;
+                columnElementBoundingBox.y2 = layoutedShapes[rowIndex][columnIndex].GetBoundingBox().y2;
+            }
+
+            columnBoudingBoxes.push(columnElementBoundingBox);
+        }
+
+        const maxColumnBoundingBoxHeight = Math.max(...columnBoudingBoxes.map(columnBox => columnBox.y2 - columnBox.y1));
+
+        for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
+            const deltaY = (maxColumnBoundingBoxHeight - (columnBoudingBoxes[columnIndex].y2 - columnBoudingBoxes[columnIndex].y1))/2;
+            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+                if(layoutedShapes[rowIndex][columnIndex] === null){
+                    continue;
+                }
+                const xPosition = layoutedShapes[rowIndex][columnIndex].x;
+                const yPosition = layoutedShapes[rowIndex][columnIndex].y;
+                layoutedShapes[rowIndex][columnIndex].SetLocation(xPosition, yPosition + deltaY);
+            }
+        }
+    })(true);
 
     // console.table(layoutedShapes)
     for(let row of layoutedShapes){
