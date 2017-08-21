@@ -37,45 +37,62 @@ window.onload = function(){
     .enter()
     .append("g");
 
-
-    var colorIterator = {
-        [Symbol.iterator](){
-            return {
-                next(){
-                    return {
-                        value: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
-                        done: false
-                    };
-                }
-            }
-        }
-    }
-    const color = colorIterator[Symbol.iterator]();
-
     const productionLine = generateDummyProductionLine();
     const source = productionLine.source;
-    const columnPatitions = fromProductionModelToVisualisationModel(productionLine);
+    const columnPartitions = fromProductionModelToVisualisationModel(productionLine);
 
-    const layoutedShapes = [];
-    let xPosition = windowMarginLeft;
-    for(let columnIndex = 0; columnIndex < columnPatitions.length; columnIndex++){
-        layoutedShapes[columnIndex] = [];
-        const currentColumn = columnPatitions[columnIndex];
-        let yPosition = windowMarginTop;
-        for(let rowIndex = 0; rowIndex < currentColumn.length; rowIndex++){
-            layoutedShapes[columnIndex][rowIndex] = new StationShape(`Station (${columnIndex},${rowIndex})`, EfficiencyLevel.Low, '0.5');
-            layoutedShapes[columnIndex][rowIndex].Render(canvas,
-                {
-                    x: xPosition,
-                    y: yPosition
-                },
-                color.next().value
-            );
-            yPosition = yPosition + layoutedShapes[columnIndex][rowIndex].height + elementMarginTop;
+    // Takes matrix of dimensions m x n and transposes it to new matrix of dimensions n x m
+    // n - number of rows of initial matrix
+    // m - number of columns of initial matrix
+    function transposeMatrix(originalMatrix){
+        if(!originalMatrix || !originalMatrix.length)
+            return [];
+
+        const originalRowCount = originalMatrix.length;
+        const originalColumnCount = Math.max(...originalMatrix.map(row => row.length));
+
+        const newMatrix = [];
+        for(let rowIndex = 0; rowIndex < originalRowCount; rowIndex++){
+            for(let columnIndex = 0; columnIndex < originalColumnCount; columnIndex++){
+                newMatrix[columnIndex] = newMatrix[columnIndex] || [];
+                newMatrix[columnIndex][rowIndex] = originalMatrix[rowIndex][columnIndex] || null;
+            }
         }
-        xPosition = xPosition + Math.max(...layoutedShapes[columnIndex].map(x => x.width)) + elementMarginLeft;
+        return newMatrix;
     }
 
+    const testMatrix = [
+        [1, 2, 3],
+        [4, 5]
+    ];
+
+    console.table(columnPartitions);
+
+    let tColumnPartitions = transposeMatrix(columnPartitions);
+    console.table(tColumnPartitions);
+    let yPosition = windowMarginTop;
+    const columnTotalHeights = [];
+    const layoutedShapes = [];
+    for(let rowIndex = 0; rowIndex < tColumnPartitions.length; rowIndex++){
+        let xPosition = windowMarginLeft;
+        for(let columnIndex = 0; columnIndex < tColumnPartitions[rowIndex].length; columnIndex++){
+            if(tColumnPartitions[rowIndex][columnIndex] === null)
+                continue;
+            layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
+            const newShape = new StationShape(`Station (${rowIndex},${columnIndex})`, EfficiencyLevel.Low, '0.5');
+            newShape.SetLocation(xPosition, yPosition);
+            layoutedShapes[rowIndex].push(newShape);
+            columnTotalHeights[columnIndex] = (columnTotalHeights[columnIndex] || 0) + newShape.height;
+            xPosition = xPosition + Math.max(...layoutedShapes[rowIndex].map(x => x.width)) + elementMarginLeft;
+        }
+        yPosition = yPosition + Math.max(...columnTotalHeights) + elementMarginTop;
+    }
+    console.table(layoutedShapes)
+    for(let row of layoutedShapes){
+        for(let element of row){
+            element.Render(canvas);
+        }
+    }
 
     // const someShape01 = new StationShape('Station 1', EfficiencyLevel.Low, '0.5');
     // someShape01.Render(canvas,
