@@ -7,16 +7,6 @@ import StationShape from './plv/visualisation/Station.js';
 import renderGradients from './plv/util/renderGradients.js';
 
 window.onload = function(){
-    var a = { title: 'A', position: {c:0, r:0}, fill: '#8fb239' },
-        b = { title: 'B', position: {c:1, r:0}, fill: '#8fb239' },
-        c = { title: 'C', position: {c:1, r:1}, fill: '#BE120C' };
-
-    a.links = [b, c];
-    b.links = [];
-    c.links = [];
-
-    var columns = [a, b, c];
-
     const canvas =
     d3.select("body")
     .append("svg")
@@ -30,12 +20,6 @@ window.onload = function(){
     const windowMarginTop = 50;
     const elementMarginTop = 80;
     const elementMarginRight = 85;
-
-    var g = canvas
-    .selectAll('g')
-    .data(columns)
-    .enter()
-    .append("g");
 
     const productionLine = generateDummyProductionLine();
     const source = productionLine.source;
@@ -61,22 +45,12 @@ window.onload = function(){
         return newMatrix;
     }
 
-    const testMatrix = [
-        [1, 2, 3],
-        [4, 5]
-    ];
-
-    // console.table(columnPartitions);
-
     let transposedColumnPartitions = transposeMatrix(columnPartitions);
-    let yPosition = windowMarginTop;
-    const columnTotalHeights = [];
     const layoutedShapes =
     transposedColumnPartitions.map(
         column => column.map(
             element => element && new StationShape(`Station`, EfficiencyLevel.Low, '0.5')
         ));
-        // console.table(layoutedShapes);
 
     function getMaxWidthForColumn(columnIndex){
         if(!layoutedShapes[0][columnIndex]){
@@ -92,50 +66,76 @@ window.onload = function(){
         return Math.max(...layoutedShapes[rowIndex].map(element => element ? element.height : 0));
     }
 
-    var alignVertically = true;
-    for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
-        let xPosition = windowMarginLeft;
-        for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
-            if(layoutedShapes[rowIndex][columnIndex] === null){
-                xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
-                continue;
-            }
-            const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
+    var options = {
+        alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
+        verticalDistributionToCanvas: ['top', 'center'][1]
+    };
 
-            let lastNotNullElementInColumn = null;
-            for(var i = 0; i < layoutedShapes.length; i++){
-                if(!!layoutedShapes[i][columnIndex]){
-                    lastNotNullElementInColumn = layoutedShapes[i][columnIndex];
+    (function distributeHorizontally_center(run){
+        if(!run) return;
+
+        const alignVertically = true;
+        for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
+            let xPosition = windowMarginLeft;
+            for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
+                if(layoutedShapes[rowIndex][columnIndex] === null){
+                    xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
+                    continue;
                 }
-            }
-            console.log('layoutedShapes[0][columnIndex].GetBoundingBox()', layoutedShapes[0][columnIndex].GetBoundingBox())
-            var columnElementBoundingBox = {
-                x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
-                y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
-                x2: lastNotNullElementInColumn.GetBoundingBox().x2,
-                y2: lastNotNullElementInColumn.GetBoundingBox().y2
-            };
-            //console.log('columnElementBoundingBox', columnElementBoundingBox);
-            layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
+                const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
 
-            if(alignVertically){
+                layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
                 xPosition = xPosition + (getMaxWidthForColumn(columnIndex) - elementWidth)/2;
-            }
-            //console.log(`columnIndex: ${columnIndex}, max width: ${getMaxWidthForColumn(columnIndex)}`)
-            layoutedShapes[rowIndex][columnIndex].SetLocation(xPosition, yPosition);
-
-            if(alignVertically){
+                layoutedShapes[rowIndex][columnIndex].Translate(xPosition, 0);
                 xPosition = xPosition + (getMaxWidthForColumn(columnIndex) - elementWidth)/2 + elementWidth;
-            } else {
-                xPosition = xPosition + getMaxWidthForColumn(columnIndex);
+                xPosition = xPosition + elementMarginRight;
+            }
+        }
+    })(options.alignToOtherElementsInTheSameColumn === 'center');
+
+    (function distributeHorizontally_left(run){
+        if(!run) return;
+
+        const alignVertically = true;
+        for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
+            let xPosition = windowMarginLeft;
+            for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
+                if(layoutedShapes[rowIndex][columnIndex] === null){
+                    xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
+                    continue;
+                }
+                const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
+
+                layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
+                layoutedShapes[rowIndex][columnIndex].Translate(xPosition, 0);
+                xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
+            }
+        }
+    })(options.alignToOtherElementsInTheSameColumn === 'left');
+
+    (function distributeVertically_top(run){
+        if(!run) return;
+
+        const alignToElementsInTheSameRow = true;
+        const alignVertically = true;
+        let yPosition = elementMarginTop;
+        for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
+            for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
+                if(layoutedShapes[rowIndex][columnIndex] === null){
+                    continue;
+                }
+                layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
             }
 
-            xPosition = xPosition + elementMarginRight;
-        }
-        yPosition = yPosition + getMaxHeightForRow(rowIndex) + elementMarginTop;
-    }
+            if(alignToElementsInTheSameRow){
+                yPosition = yPosition + getMaxHeightForRow(rowIndex);
+            }
 
-    (function alighHorizontally(run){
+            yPosition = yPosition + elementMarginTop;
+        }
+    })(options.verticalDistributionToCanvas === 'top');
+
+    (function distributeVertically_center(run){
         if(!run) return;
 
         const columnBoudingBoxes = [];
@@ -143,15 +143,27 @@ window.onload = function(){
         const numberOfColumns = layoutedShapes[0].length;
 
         for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
+            let yPosition =  windowMarginTop;
+            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+                if(layoutedShapes[rowIndex][columnIndex] === null){
+                    continue;
+                }
+
+                layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
+                yPosition = yPosition + layoutedShapes[rowIndex][columnIndex].height + elementMarginTop;
+            }
+        }
+
+        for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
             var columnElementBoundingBox = {
                 x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
                 y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
-                x2: null,
-                y2: null
+                x2: 0,
+                y2: 0
             };
 
             for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
-                if(layoutedShapes[rowIndex][columnIndex] === null){
+                if(!layoutedShapes[rowIndex][columnIndex]){
                     continue;
                 }
                 columnElementBoundingBox.x2 = layoutedShapes[rowIndex][columnIndex].GetBoundingBox().x2;
@@ -162,21 +174,18 @@ window.onload = function(){
         }
 
         const maxColumnBoundingBoxHeight = Math.max(...columnBoudingBoxes.map(columnBox => columnBox.y2 - columnBox.y1));
-
+        debugger;
         for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
             const deltaY = (maxColumnBoundingBoxHeight - (columnBoudingBoxes[columnIndex].y2 - columnBoudingBoxes[columnIndex].y1))/2;
             for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
-                if(layoutedShapes[rowIndex][columnIndex] === null){
+                if(!layoutedShapes[rowIndex][columnIndex]){
                     continue;
                 }
-                const xPosition = layoutedShapes[rowIndex][columnIndex].x;
-                const yPosition = layoutedShapes[rowIndex][columnIndex].y;
-                layoutedShapes[rowIndex][columnIndex].SetLocation(xPosition, yPosition + deltaY);
+                layoutedShapes[rowIndex][columnIndex].Translate(0, deltaY);
             }
         }
-    })(true);
+    })(options.verticalDistributionToCanvas === 'center');
 
-    // console.table(layoutedShapes)
     for(let row of layoutedShapes){
         for(let element of row){
             element && element.Render(canvas);

@@ -22,4 +22,9 @@ export default class ShapeBase{
             y2: this.y + this.height,
         };
     }
+
+    Translate(deltaX, deltaY){
+        this.x = this.x + deltaX;
+        this.y = this.y + deltaY;
+    }
 }
