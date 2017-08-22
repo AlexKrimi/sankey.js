@@ -31,8 +31,8 @@ export default class Station extends ShapeBase {
         group
         .append('use')
         .attr('href', stationSvgIdCode[this.efficiencyLevel])
-        .attr('width', '75')
-        .attr('height', '68.05')
+        .attr('width', this.width)
+        .attr('height', this.height)
         .attr('x', this.x)
         .attr('y', this.y);
 
@@ -40,8 +40,8 @@ export default class Station extends ShapeBase {
         group
         .append('text')
         .attr('x', this.x + 5)
-        .attr('y', this.y + 48)
-        .text(this.label)
+        .attr('y', this.y + 49)
+        .text(this.label || 'N/A')
         .attr('font-family', 'sans-serif')
         .attr('font-size', '10px')
         .attr('fill', 'white');
@@ -50,8 +50,8 @@ export default class Station extends ShapeBase {
         group
         .append('text')
         .attr('x', this.x + 5)
-        .attr('y', this.y + 61)
-        .text(this.efficiencyRelativeAmountLabel)
+        .attr('y', this.y + 62)
+        .text(this.efficiencyRelativeAmountLabel || 'N/A')
         .attr('font-family', 'sans-serif')
         .attr('font-size', '11px')
         .attr('fill', 'white');

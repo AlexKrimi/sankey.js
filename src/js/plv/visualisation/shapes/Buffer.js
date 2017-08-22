@@ -29,17 +29,18 @@ export default class Buffer extends ShapeBase {
         group
         .append('use')
         .attr('href', bufferSvgIdCode[this.efficiencyLevel])
-        .attr('width', '54')
-        .attr('height', '55.49')
+        .attr('width', this.width)
+        .attr('height', this.height)
         .attr('x', this.x)
         .attr('y', this.y);
 
         const label =
         group
         .append('text')
-        .attr('x', this.x + 5)
-        .attr('y', this.y + 48)
-        .text(this.label)
+        .text(this.label || 'N/A')
+        .attr('text-anchor', 'middle')
+        .attr('x', this.x + this.width / 2)
+        .attr('y', this.y + 49)
         .attr('font-family', 'sans-serif')
         .attr('font-size', '10px')
         .attr('fill', 'white');
