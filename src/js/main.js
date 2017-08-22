@@ -23,6 +23,11 @@ window.onload = function(){
         for(let svgSymbol of stationSvgSymbols){
             loadSvgImage(svgSymbol);
         }
+
+        var bufferSvgSymbols = ['buffer-low', 'buffer-medium',  'buffer-high', 'buffer-not-available'];
+        for(let svgSymbol of bufferSvgSymbols){
+            loadSvgImage(svgSymbol);
+        }
      })();
 
     const canvas =

@@ -1,6 +1,7 @@
 import StationShape from '../visualisation/shapes/Station.js';
 import Source from '../visualisation/shapes/Source.js';
 import Drain from '../visualisation/shapes/Drain.js';
+import Buffer from '../visualisation/shapes/Buffer.js';
 import EfficiencyLevel from '../EfficiencyLevel.js';
 
 export default function(options, columnPartitions){
@@ -19,6 +20,9 @@ export default function(options, columnPartitions){
                         }
                         if(element.constructor.name === 'Drain'){
                             return new Drain();
+                        }
+                        if(element.constructor.name === 'Buffer'){
+                            return new Buffer(element.label, element.efficiencyLevel);
                         }
                         return new StationShape(`Something else`, EfficiencyLevel.High, '0.5');
                     }
