@@ -2,9 +2,10 @@ import EfficiencyLevel from './plv/EfficiencyLevel.js';
 import ProductionLineModel from './plv/ProductionLineModel.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToVisualisationModel from './fromProductionModelToVisualisationModel.js';
-import StationShape from './plv/visualisation/Station.js';
+import StationShape from './plv/visualisation/shapes/Station.js';
 
 import renderGradients from './plv/util/renderGradients.js';
+import LayoutManager from './plv/visualisation/LayoutManager.js';
 
 window.onload = function(){
     const canvas =
@@ -14,184 +15,26 @@ window.onload = function(){
     .attr("width", 1800)
     .attr("height", 1000);
 
-    const rectWidth = 25;
-    const rectHeight = 100;
-    const windowMarginLeft = 50;
-    const windowMarginTop = 50;
-    const elementMarginTop = 80;
-    const elementMarginRight = 85;
+    var options = {
+        alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
+        verticalDistributionToCanvas: ['top', 'center'][1],
+        windowMarginLeft: 50,
+        windowMarginTop: 50,
+        elementMarginTop: 80,
+        elementMarginRight: 85
+    };
+
 
     const productionLine = generateDummyProductionLine();
     const source = productionLine.source;
     const columnPartitions = fromProductionModelToVisualisationModel(productionLine);
-
-    // Takes matrix of dimensions m x n and transposes it to new matrix of dimensions n x m
-    // n - number of rows of initial matrix
-    // m - number of columns of initial matrix
-    function transposeMatrix(originalMatrix){
-        if(!originalMatrix || !originalMatrix.length)
-            return [];
-
-        const originalRowCount = originalMatrix.length;
-        const originalColumnCount = Math.max(...originalMatrix.map(row => row.length));
-
-        const newMatrix = [];
-        for(let rowIndex = 0; rowIndex < originalRowCount; rowIndex++){
-            for(let columnIndex = 0; columnIndex < originalColumnCount; columnIndex++){
-                newMatrix[columnIndex] = newMatrix[columnIndex] || [];
-                newMatrix[columnIndex][rowIndex] = originalMatrix[rowIndex][columnIndex] || null;
-            }
-        }
-        return newMatrix;
-    }
-
-    let transposedColumnPartitions = transposeMatrix(columnPartitions);
-    const layoutedShapes =
-    transposedColumnPartitions.map(
-        column => column.map(
-            element => element && new StationShape(`Station`, EfficiencyLevel.Low, '0.5')
-        ));
-
-    function getMaxWidthForColumn(columnIndex){
-        if(!layoutedShapes[0][columnIndex]){
-            return 0;
-        }
-        var column = layoutedShapes.map(row => row[columnIndex]);
-        return Math.max(...column.map(element => element ? element.width : 0));
-    }
-
-    function getMaxHeightForRow(rowIndex){
-        if(!layoutedShapes[rowIndex])
-            return 0;
-        return Math.max(...layoutedShapes[rowIndex].map(element => element ? element.height : 0));
-    }
-
-    var options = {
-        alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
-        verticalDistributionToCanvas: ['top', 'center'][1]
-    };
-
-    (function distributeHorizontally_center(run){
-        if(!run) return;
-
-        const alignVertically = true;
-        for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
-            let xPosition = windowMarginLeft;
-            for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
-                if(layoutedShapes[rowIndex][columnIndex] === null){
-                    xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
-                    continue;
-                }
-                const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
-
-                layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
-                xPosition = xPosition + (getMaxWidthForColumn(columnIndex) - elementWidth)/2;
-                layoutedShapes[rowIndex][columnIndex].Translate(xPosition, 0);
-                xPosition = xPosition + (getMaxWidthForColumn(columnIndex) - elementWidth)/2 + elementWidth;
-                xPosition = xPosition + elementMarginRight;
-            }
-        }
-    })(options.alignToOtherElementsInTheSameColumn === 'center');
-
-    (function distributeHorizontally_left(run){
-        if(!run) return;
-
-        const alignVertically = true;
-        for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
-            let xPosition = windowMarginLeft;
-            for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
-                if(layoutedShapes[rowIndex][columnIndex] === null){
-                    xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
-                    continue;
-                }
-                const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
-
-                layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
-                layoutedShapes[rowIndex][columnIndex].Translate(xPosition, 0);
-                xPosition = xPosition + getMaxWidthForColumn(columnIndex) + elementMarginRight;
-            }
-        }
-    })(options.alignToOtherElementsInTheSameColumn === 'left');
-
-    (function distributeVertically_top(run){
-        if(!run) return;
-
-        const alignToElementsInTheSameRow = true;
-        const alignVertically = true;
-        let yPosition = elementMarginTop;
-        for(let rowIndex = 0; rowIndex < layoutedShapes.length; rowIndex++){
-            for(let columnIndex = 0; columnIndex < layoutedShapes[rowIndex].length; columnIndex++){
-                if(layoutedShapes[rowIndex][columnIndex] === null){
-                    continue;
-                }
-                layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
-            }
-
-            if(alignToElementsInTheSameRow){
-                yPosition = yPosition + getMaxHeightForRow(rowIndex);
-            }
-
-            yPosition = yPosition + elementMarginTop;
-        }
-    })(options.verticalDistributionToCanvas === 'top');
-
-    (function distributeVertically_center(run){
-        if(!run) return;
-
-        const columnBoudingBoxes = [];
-        const numberOfRows = layoutedShapes.length;
-        const numberOfColumns = layoutedShapes[0].length;
-
-        for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
-            let yPosition =  windowMarginTop;
-            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
-                if(layoutedShapes[rowIndex][columnIndex] === null){
-                    continue;
-                }
-
-                layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
-                yPosition = yPosition + layoutedShapes[rowIndex][columnIndex].height + elementMarginTop;
-            }
-        }
-
-        for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
-            var columnElementBoundingBox = {
-                x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
-                y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
-                x2: 0,
-                y2: 0
-            };
-
-            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
-                if(!layoutedShapes[rowIndex][columnIndex]){
-                    continue;
-                }
-                columnElementBoundingBox.x2 = layoutedShapes[rowIndex][columnIndex].GetBoundingBox().x2;
-                columnElementBoundingBox.y2 = layoutedShapes[rowIndex][columnIndex].GetBoundingBox().y2;
-            }
-
-            columnBoudingBoxes.push(columnElementBoundingBox);
-        }
-
-        const maxColumnBoundingBoxHeight = Math.max(...columnBoudingBoxes.map(columnBox => columnBox.y2 - columnBox.y1));
-        debugger;
-        for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
-            const deltaY = (maxColumnBoundingBoxHeight - (columnBoudingBoxes[columnIndex].y2 - columnBoudingBoxes[columnIndex].y1))/2;
-            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
-                if(!layoutedShapes[rowIndex][columnIndex]){
-                    continue;
-                }
-                layoutedShapes[rowIndex][columnIndex].Translate(0, deltaY);
-            }
-        }
-    })(options.verticalDistributionToCanvas === 'center');
+    const layoutedShapes = LayoutManager(options, columnPartitions);
 
     for(let row of layoutedShapes){
         for(let element of row){
             element && element.Render(canvas);
         }
     }
-
 
 
     // const someShape01 = new StationShape('Station 1', EfficiencyLevel.Low, '0.5');
