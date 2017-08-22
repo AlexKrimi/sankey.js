@@ -1,13 +1,15 @@
 export default class ShapeBase{
-    constructor(){
+    constructor(width, height){
+        this._width = width;
+        this._height = height;
         this.x = 0;
         this.y = 0;
     }
 
-    get width() { }
-    get height() { }
+    get width() { return this._width; }
+    get height() { return this._height; }
 
-    Render(svg, color) { }
+    Render() { }
 
     SetLocation(x, y){
         this.x = x;

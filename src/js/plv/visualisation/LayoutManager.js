@@ -1,4 +1,6 @@
 import StationShape from '../visualisation/shapes/Station.js';
+import Source from '../visualisation/shapes/Source.js';
+import Drain from '../visualisation/shapes/Drain.js';
 import EfficiencyLevel from '../EfficiencyLevel.js';
 
 export default function(options, columnPartitions){
@@ -11,6 +13,12 @@ export default function(options, columnPartitions){
                     if(element){
                         if(element.constructor.name === 'Station'){
                             return new StationShape(element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel);
+                        }
+                        if(element.constructor.name === 'Source'){
+                            return new Source();
+                        }
+                        if(element.constructor.name === 'Drain'){
+                            return new Drain();
                         }
                         return new StationShape(`Something else`, EfficiencyLevel.High, '0.5');
                     }

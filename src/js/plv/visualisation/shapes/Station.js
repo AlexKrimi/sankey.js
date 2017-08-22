@@ -22,7 +22,7 @@ export default class Station extends ShapeBase {
     get width() { return 75; }
     get height() { return 68.05; }
 
-    Render(svg){
+    Render(){
         const group =
         d3
         .select('#canvas')
@@ -39,21 +39,21 @@ export default class Station extends ShapeBase {
         const label =
         group
         .append('text')
-        .attr("x", this.x + 5)
-        .attr("y", this.y + 48)
+        .attr('x', this.x + 5)
+        .attr('y', this.y + 48)
         .text(this.label)
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "10px")
-        .attr("fill", "white");
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '10px')
+        .attr('fill', 'white');
 
         const efficiencyRelativeAmountLabel =
         group
         .append('text')
-        .attr("x", this.x + 5)
-        .attr("y", this.y + 61)
+        .attr('x', this.x + 5)
+        .attr('y', this.y + 61)
         .text(this.efficiencyRelativeAmountLabel)
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "11px")
-        .attr("fill", "white");
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '11px')
+        .attr('fill', 'white');
     }
 }
