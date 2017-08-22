@@ -4,10 +4,19 @@ import EfficiencyLevel from '../EfficiencyLevel.js';
 export default function(options, columnPartitions){
     let transposedColumnPartitions = transposeMatrix(columnPartitions);
     const layoutedShapes =
-    transposedColumnPartitions.map(
-        column => column.map(
-            element => element && new StationShape(`Station`, EfficiencyLevel.Low, '0.5')
-        ));
+        transposedColumnPartitions.map(
+            column => column.map(
+                function(element) {
+                    // TODO Refactor out. Diferentiate types.
+                    if(element){
+                        if(element.constructor.name === 'Station'){
+                            return new StationShape(element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel);
+                        }
+                        return new StationShape(`Something else`, EfficiencyLevel.High, '0.5');
+                    }
+                    return null;
+                }
+            ));
 
     if(options.alignToOtherElementsInTheSameColumn === 'center')
         alignToOtherElementsInTheSameColumn_center(options, layoutedShapes);

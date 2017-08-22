@@ -7,7 +7,24 @@ import StationShape from './plv/visualisation/shapes/Station.js';
 import renderGradients from './plv/util/renderGradients.js';
 import LayoutManager from './plv/visualisation/LayoutManager.js';
 
+function loadSvgImage(filename){
+    d3
+    .xml(`./src/images/${filename}.svg`)
+    .mimeType("image/svg+xml")
+    .get(function(error, xml) {
+        if (error) throw error;
+        document.body.appendChild(xml.documentElement);
+    });
+}
+
 window.onload = function(){
+    (function loadExternalImages(){
+        var stationSvgSymbols = ['station-low', 'station-medium',  'station-high', 'station-not-available'];
+        for(let svgSymbol of stationSvgSymbols){
+            loadSvgImage(svgSymbol);
+        }
+     })();
+
     const canvas =
     d3.select("body")
     .append("svg")
@@ -35,7 +52,6 @@ window.onload = function(){
             element && element.Render(canvas);
         }
     }
-
 
     // const someShape01 = new StationShape('Station 1', EfficiencyLevel.Low, '0.5');
     // someShape01.Render(canvas,
