@@ -10,11 +10,11 @@ export default function renderGradients(svg){
         var color = d3.interpolateRgb(element.dataset.gradientStart, element.dataset.gradientEnd);
         svg
         .selectAll('.flow')
-        .data(quads(sampleSingle(element, 2)))
+        .data(quads(sampleSingle(element, 1)))
         .enter()
         .append("path")
         .style("fill", function (d) { return color(d.t); })
-        .style("stroke", function (d) { return color(d.t); })
+        .style("fill-opacity", 0.7)
         .attr("d", function (d) { return lineJoin(d[0], d[1], d[2], d[3], 32); });
     }
 }
@@ -61,7 +61,7 @@ function lineJoin(p0, p1, p2, p3, width) {
         c = lineIntersect(p2, e, d, c);
     }
 
-    return "M" + a + "L" + b + " " + c + " " + d + "Z";
+    return `M${a}L${b} ${c} ${d}Z`;
 }
 
 // Compute intersection of two infinite lines ab and cd.

@@ -52,12 +52,12 @@ window.onload = function(){
     const columnPartitions = fromProductionModelToVisualisationModel(productionLine);
     const layoutedShapes = LayoutManager(options, columnPartitions);
 
+    LinkManager(productionLine, layoutedShapes, canvas);
+    renderGradients(canvas);
+
     for(let row of layoutedShapes){
         for(let element of row){
             element && element.Render(canvas);
         }
     }
-
-    LinkManager(productionLine, layoutedShapes, canvas);
-    renderGradients(canvas);
 }
