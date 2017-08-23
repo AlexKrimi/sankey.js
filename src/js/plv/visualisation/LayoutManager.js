@@ -1,34 +1,11 @@
-import StationShape from '../visualisation/shapes/Station.js';
-import Source from '../visualisation/shapes/Source.js';
-import Drain from '../visualisation/shapes/Drain.js';
-import Buffer from '../visualisation/shapes/Buffer.js';
+import StationShape from '../visualisation/shapes/domain/Station.js';
+import Source from '../visualisation/shapes/domain/Source.js';
+import Drain from '../visualisation/shapes/domain/Drain.js';
+import Buffer from '../visualisation/shapes/domain/Buffer.js';
 import EfficiencyLevel from '../EfficiencyLevel.js';
 
-export default function(options, columnPartitions){
-    let transposedColumnPartitions = transposeMatrix(columnPartitions);
-    const layoutedShapes =
-        transposedColumnPartitions.map(
-            column => column.map(
-                function(element) {
-                    // TODO Refactor out. Diferentiate types.
-                    if(element){
-                        if(element.constructor.name === 'Station'){
-                            return new StationShape(element.id, element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel);
-                        }
-                        if(element.constructor.name === 'Source'){
-                            return new Source(element.id);
-                        }
-                        if(element.constructor.name === 'Drain'){
-                            return new Drain(element.id);
-                        }
-                        if(element.constructor.name === 'Buffer'){
-                            return new Buffer(element.id, element.label, element.efficiencyLevel);
-                        }
-                        throw new Error('Unsupported type of entity.');
-                    }
-                    return null;
-                }
-            ));
+export default function(options, columnPartitionsWithShapes){
+    const layoutedShapes = columnPartitionsWithShapes;
 
     if(options.alignToOtherElementsInTheSameColumn === 'center')
         alignToOtherElementsInTheSameColumn_center(options, layoutedShapes);
@@ -45,27 +22,6 @@ export default function(options, columnPartitions){
         throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
 
     return layoutedShapes;
-}
-
-
-// Takes matrix of dimensions m x n and transposes it to new matrix of dimensions n x m
-// n - number of rows of initial matrix
-// m - number of columns of initial matrix
-function transposeMatrix(originalMatrix){
-    if(!originalMatrix || !originalMatrix.length)
-        return [];
-
-    const originalRowCount = originalMatrix.length;
-    const originalColumnCount = Math.max(...originalMatrix.map(row => row.length));
-
-    const newMatrix = [];
-    for(let rowIndex = 0; rowIndex < originalRowCount; rowIndex++){
-        for(let columnIndex = 0; columnIndex < originalColumnCount; columnIndex++){
-            newMatrix[columnIndex] = newMatrix[columnIndex] || [];
-            newMatrix[columnIndex][rowIndex] = originalMatrix[rowIndex][columnIndex] || null;
-        }
-    }
-    return newMatrix;
 }
 
 function getMaxWidthForColumn(layoutedShapes, columnIndex){

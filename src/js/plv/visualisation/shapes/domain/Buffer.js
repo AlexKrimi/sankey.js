@@ -1,5 +1,5 @@
-import ShapeBase from './ShapeBase.js'
-import EfficiencyLevel from '../../EfficiencyLevel.js';
+import ShapeBase from '../ShapeBase.js'
+import EfficiencyLevel from '../../../EfficiencyLevel.js';
 
 const bufferSvgIdCode = {};
 bufferSvgIdCode[EfficiencyLevel.Low] = '#buffer-low';

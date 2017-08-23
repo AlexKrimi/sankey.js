@@ -67,6 +67,7 @@ export default class ProductionLineModel {
             throw new Error(`Cannot create edge between two verteces if both of them are not previously added (registered) to the model. Cannot find target node.`);
 
         originNode.AddFlowTo(targetNode);
+        targetNode.AddFlowFrom(originNode);
     }
 
     AddEdges(newVertexTuples){

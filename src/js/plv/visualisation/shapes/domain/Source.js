@@ -1,4 +1,4 @@
-import ShapeBase from './ShapeBase.js'
+import ShapeBase from '../ShapeBase.js'
 
 export default class Source extends ShapeBase {
     constructor(id){

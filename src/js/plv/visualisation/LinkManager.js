@@ -1,7 +1,7 @@
-import StationShape from '../visualisation/shapes/Station.js';
-import Source from '../visualisation/shapes/Source.js';
-import Drain from '../visualisation/shapes/Drain.js';
-import Buffer from '../visualisation/shapes/Buffer.js';
+import StationShape from '../visualisation/shapes/domain/Station.js';
+import Source from '../visualisation/shapes/domain/Source.js';
+import Drain from '../visualisation/shapes/domain/Drain.js';
+import Buffer from '../visualisation/shapes/domain/Buffer.js';
 import EfficiencyLevel from '../EfficiencyLevel.js';
 
 const colorCodeForLevel = {};
@@ -15,15 +15,14 @@ export default function(productionLine, layoutedShapes, canvas){
     const findShapeById = (function(){
         const allShapes =
             layoutedShapes.reduce(
-                (aggregate, current) =>
-                    current !== null
-                    ? aggregate.concat(current)
-                    : aggregate
-                , []);
+                (aggregate, current) => !!current ? aggregate.concat(current): aggregate,
+            []);
+
         return function(id){
             return allShapes.filter(shape => !!shape).find(shape => shape.id === id);
         }
     })();
+
     const lineFunction =
         d3.line()
         .x(function(d) { return d.x; })
@@ -40,10 +39,10 @@ export default function(productionLine, layoutedShapes, canvas){
             const distanceBetweenBounds = toShapeBounds.x1 - fromShapeBounds.x2;
 
             var lineData = [
-                { x: fromShapeBounds.x2, y: getMiddleY(fromShapeBounds) },
+                { x: fromShapeBounds.x2,                                y: getMiddleY(fromShapeBounds) },
                 { x: fromShapeBounds.x2 + distanceBetweenBounds * 0.20, y: getMiddleY(fromShapeBounds) },
-                { x: toShapeBounds.x1 - distanceBetweenBounds * 0.20, y: getMiddleY(toShapeBounds)},
-                { x: toShapeBounds.x1, y: getMiddleY(toShapeBounds)}
+                { x: toShapeBounds.x1 - distanceBetweenBounds * 0.20,   y: getMiddleY(toShapeBounds) },
+                { x: toShapeBounds.x1,                                  y: getMiddleY(toShapeBounds) }
             ];
 
             const flowGroup = canvas
