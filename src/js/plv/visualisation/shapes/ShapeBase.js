@@ -1,11 +1,13 @@
 export default class ShapeBase{
-    constructor(width, height){
+    constructor(id, width, height){
+        this._id = id;
         this._width = width;
         this._height = height;
         this.x = 0;
         this.y = 0;
     }
 
+    get id() { return this._id; }
     get width() { return this._width; }
     get height() { return this._height; }
 

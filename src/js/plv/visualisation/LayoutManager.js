@@ -13,18 +13,18 @@ export default function(options, columnPartitions){
                     // TODO Refactor out. Diferentiate types.
                     if(element){
                         if(element.constructor.name === 'Station'){
-                            return new StationShape(element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel);
+                            return new StationShape(element.id, element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel);
                         }
                         if(element.constructor.name === 'Source'){
-                            return new Source();
+                            return new Source(element.id);
                         }
                         if(element.constructor.name === 'Drain'){
-                            return new Drain();
+                            return new Drain(element.id);
                         }
                         if(element.constructor.name === 'Buffer'){
-                            return new Buffer(element.label, element.efficiencyLevel);
+                            return new Buffer(element.id, element.label, element.efficiencyLevel);
                         }
-                        return new StationShape(`Something else`, EfficiencyLevel.High, '0.5');
+                        throw new Error('Unsupported type of entity.');
                     }
                     return null;
                 }

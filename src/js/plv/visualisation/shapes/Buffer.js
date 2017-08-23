@@ -9,16 +9,14 @@ bufferSvgIdCode[undefined] = '#buffer-not-available';
 bufferSvgIdCode[null] = '#buffer-not-available';
 
 export default class Buffer extends ShapeBase {
-    constructor(label, efficiencyLevel){
-        super();
+    constructor(id, label, efficiencyLevel){
+        super(id, 54, 55.49);
         this._label = label;
         this._efficiencyLevel = efficiencyLevel;
     }
 
     get label() { return this._label; }
     get efficiencyLevel() { return this._efficiencyLevel; }
-    get width() { return 54; }
-    get height() { return 55.49; }
 
     Render(){
         const group =
@@ -27,22 +25,22 @@ export default class Buffer extends ShapeBase {
         .append("g");
 
         group
-        .append('use')
-        .attr('href', bufferSvgIdCode[this.efficiencyLevel])
-        .attr('width', this.width)
-        .attr('height', this.height)
-        .attr('x', this.x)
-        .attr('y', this.y);
+            .append('use')
+            .attr('href', bufferSvgIdCode[this.efficiencyLevel])
+            .attr('width', this.width)
+            .attr('height', this.height)
+            .attr('x', this.x)
+            .attr('y', this.y);
 
         const label =
-        group
-        .append('text')
-        .text(this.label || 'N/A')
-        .attr('text-anchor', 'middle')
-        .attr('x', this.x + this.width / 2)
-        .attr('y', this.y + 49)
-        .attr('font-family', 'sans-serif')
-        .attr('font-size', '10px')
-        .attr('fill', 'white');
+            group
+            .append('text')
+            .text(this.label || 'N/A')
+            .attr('text-anchor', 'middle')
+            .attr('x', this.x + this.width / 2)
+            .attr('y', this.y + 49)
+            .attr('font-family', 'sans-serif')
+            .attr('font-size', '10px')
+            .attr('fill', 'white');
     }
 }

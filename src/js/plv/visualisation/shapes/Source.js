@@ -1,35 +1,20 @@
 import ShapeBase from './ShapeBase.js'
 
 export default class Source extends ShapeBase {
-    constructor(){
-        const radius = 15;
-        super(
-            2 * radius,
-            2 * radius
-        );
-        this._radius = radius;
+    constructor(id){
+        super(id, 16, 50);
     }
 
     Render(){
-        // arc draws arc around x, y. Therefor circle falls out of "standard" square and we need to translate it.
-        const
-            leftEdgeShiftToCenter = this._radius,
-            topEdgeShiftToCenter = this._radius;
-
-        var group =
+        const group =
             d3.select("#canvas")
-            .append("g")
-            .attr("transform", `translate(${this.x + leftEdgeShiftToCenter}, ${this.y + topEdgeShiftToCenter})`);
+            .append("g");
 
-        var arc = d3.arc()
-            .innerRadius(0)
-            .outerRadius(this._radius)
-            .startAngle(0)
-            .endAngle(2 * Math.PI);
-
-        group.append("path")
-            .attr("class", "arc")
-            .attr("d", arc)
-            .attr('class', 'gray');
+        group.append('rect')
+            .attr('x', this.x)
+            .attr('y', this.y)
+            .attr('width', this.width)
+            .attr('height', this.height)
+            .attr('class', 'black');
     }
 }

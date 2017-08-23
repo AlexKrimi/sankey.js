@@ -1,44 +1,28 @@
 import ShapeBase from './ShapeBase.js'
 
 export default class Drain extends ShapeBase {
-    constructor(){
-        const radius = 15;
-        super(
-            2 * radius,
-            2 * radius
-        );
-        this._radius = radius;
+    constructor(id){
+        super(id, 16, 50);
     }
 
-    // GetBoundingBox(){
-    //     return {
-    //         x1: this.x - this._radius + 40,
-    //         y1: this.y - this._radius,
-    //         x2: this.x + this._radius,
-    //         y2: this.y + this._radius
-    //     };
-    // }
-
     Render(){
-        // arc draws arc around x, y. Therefor circle falls out of "standard" square and we need to translate it.
-        const
-            leftEdgeShiftToCenter = this._radius,
-            topEdgeShiftToCenter = this._radius;
+        const group =
+            d3.select('#canvas')
+            .append('g');
 
-        var group =
-        d3.select('#canvas')
-        .append('g')
-        .attr('transform', `translate(${this.x + leftEdgeShiftToCenter}, ${this.y + topEdgeShiftToCenter})`);
+        group.append('rect')
+            .attr('x', this.x)
+            .attr('y', this.y)
+            .attr('width', this.width)
+            .attr('height', this.height)
+            .attr('class', 'black');
 
-        var arc = d3.arc()
-            .innerRadius(10)
-            .outerRadius(this._radius)
-            .startAngle(0)
-            .endAngle(2 * Math.PI);
-
-        group.append('path')
-            .attr('class', 'arc')
-            .attr('d', arc)
-            .attr('class', 'gray');
+        const widthOfBorder = 4;
+        group.append('rect')
+            .attr('x', this.x + widthOfBorder)
+            .attr('y', this.y + widthOfBorder)
+            .attr('width', this.width - 2 * widthOfBorder)
+            .attr('height', this.height - 2 * widthOfBorder)
+            .attr('class', 'white');
     }
 }
