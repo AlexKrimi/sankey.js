@@ -42,8 +42,8 @@ export default function(productionLine, layoutedShapes, canvas){
             var lineData = [
                 { x: fromShapeBounds.x2, y: getMiddleY(fromShapeBounds) },
                 { x: fromShapeBounds.x2 + distanceBetweenBounds * 0.20, y: getMiddleY(fromShapeBounds) },
-                { x: toShapeBounds.x1 - distanceBetweenBounds * 0.20, y: getMiddleY(toShapeBounds) + 1},
-                { x: toShapeBounds.x1, y: getMiddleY(toShapeBounds) + 1}
+                { x: toShapeBounds.x1 - distanceBetweenBounds * 0.20, y: getMiddleY(toShapeBounds)},
+                { x: toShapeBounds.x1, y: getMiddleY(toShapeBounds)}
             ];
 
             const flowGroup = canvas
