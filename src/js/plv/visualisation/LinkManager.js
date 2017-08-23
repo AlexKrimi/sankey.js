@@ -14,12 +14,14 @@ colorCodeForLevel[null] = 'gray';
 export default function(productionLine, layoutedShapes, canvas){
     const findShapeById = (function(){
         const allShapes =
-            layoutedShapes.reduce(
+            layoutedShapes
+            .reduce(
                 (aggregate, current) => !!current ? aggregate.concat(current): aggregate,
-            []);
-
+            [])
+            .filter(shape => !!shape);
+        debugger;
         return function(id){
-            return allShapes.filter(shape => !!shape).find(shape => shape.id === id);
+            return allShapes.find(shape => shape.id === id);
         }
     })();
 

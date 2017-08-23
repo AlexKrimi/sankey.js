@@ -102,4 +102,8 @@ export default class ProductionLineModel {
         }
         return true;
     }
+
+    Get(id){
+        return this.verteces.find(vertex => vertex.id === id);
+    }
 }

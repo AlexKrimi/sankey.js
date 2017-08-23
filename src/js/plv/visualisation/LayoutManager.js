@@ -77,6 +77,7 @@ function alignToOtherElementsInTheSameColumn_left(options, layoutedShapes){
 }
 
 function verticalDistributionToCanvas_top(options, layoutedShapes){
+    // TODO Refactor these constants
     const numberOfRows = layoutedShapes.length;
     const numberOfColumns = layoutedShapes[0].length;
 
@@ -121,8 +122,9 @@ function verticalDistributionToCanvas_center(options, layoutedShapes){
             if(!layoutedShapes[rowIndex][columnIndex]){
                 continue;
             }
-            columnElementBoundingBox.x2 = layoutedShapes[rowIndex][columnIndex].GetBoundingBox().x2;
-            columnElementBoundingBox.y2 = layoutedShapes[rowIndex][columnIndex].GetBoundingBox().y2;
+            const currentBounding = layoutedShapes[rowIndex][columnIndex].GetBoundingBox();
+            columnElementBoundingBox.x2 = currentBounding.x2;
+            columnElementBoundingBox.y2 = currentBounding.y2;
         }
 
         columnBoudingBoxes.push(columnElementBoundingBox);
