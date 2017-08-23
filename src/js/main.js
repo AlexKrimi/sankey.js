@@ -10,6 +10,7 @@ import StationShape from './plv/visualisation/shapes/domain/Station.js';
 import Source from './plv/visualisation/shapes/domain/Source.js';
 import Drain from './plv/visualisation/shapes/domain/Drain.js';
 import Buffer from './plv/visualisation/shapes/domain/Buffer.js';
+import ImaginaryShape from './plv/visualisation/shapes/ImaginaryShape.js';
 
 function loadSvgImage(filename){
     d3
@@ -38,8 +39,8 @@ window.onload = function(){
         d3.select("body")
         .append("svg")
         .attr("id", 'canvas')
-        .attr("width", 1800)
-        .attr("height", 1000);
+        .attr("width", 2000)
+        .attr("height", 600);
 
     var options = {
         alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
@@ -60,7 +61,7 @@ window.onload = function(){
         'Source':  element => new Source(element.id),
         'Station': element => new StationShape(element.id, element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel),
     };
-    const columnPartitionsWithShapes =
+    let columnPartitionsWithShapes =
         transposedColumnPartitions.map(
             column => column.map(
                 element =>
@@ -69,6 +70,62 @@ window.onload = function(){
                     : null
             )
         );
+
+    columnPartitionsWithShapes = (function normalize(columnPartitionsWithShapes, productionLine){
+        const normalizedLayout = [];
+        const numberOfRows = columnPartitionsWithShapes.length;
+        const numberOfColumns = columnPartitionsWithShapes[0].length;
+        const getColumnIndexByVertexId = function(matrix, id){
+            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+                for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
+                    const element = matrix[rowIndex][columnIndex];
+                    if(element && element.id === id)
+                        return columnIndex;
+                }
+            }
+            return -1;
+        }
+        const hasVertecesPointingToItFromSameColumn = function(matrix, vertex, columnIndex){
+            const flowsFrom = vertex.flowsFrom;
+            return flowsFrom.some(
+                element =>
+                    !!element
+                    ? getColumnIndexByVertexId(matrix, element.id) === columnIndex
+                    : false
+            );
+        }
+        for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
+            const firstColumn = [];
+            const secondColumn = [];
+            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+                const currentShape = columnPartitionsWithShapes[rowIndex][columnIndex];
+                if(currentShape === null){
+                    firstColumn.push(null);
+                    secondColumn.push(null);
+                    continue;
+                }
+                const currentVertex = productionLine.Get(currentShape.id);
+
+                if(hasVertecesPointingToItFromSameColumn(columnPartitionsWithShapes, currentVertex, columnIndex)){
+                    firstColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
+                    secondColumn.push(currentShape);
+
+                } else {
+                    firstColumn.push(currentShape);
+                    secondColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
+                }
+            }
+            const secondColumnShouldBeAdded = secondColumn.some(x => !!x && x.id !== ImaginaryShape.Id);
+
+            for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+                normalizedLayout[rowIndex] = normalizedLayout[rowIndex] || [];
+                normalizedLayout[rowIndex].push(firstColumn[rowIndex]);
+                if(secondColumnShouldBeAdded)
+                    normalizedLayout[rowIndex].push(secondColumn[rowIndex]);
+            }
+        }
+        return normalizedLayout;
+    })(columnPartitionsWithShapes, productionLine);
 
     const layoutedShapes = LayoutManager(options, columnPartitionsWithShapes);
 

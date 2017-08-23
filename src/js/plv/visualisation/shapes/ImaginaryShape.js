@@ -1,9 +1,10 @@
 import ShapeBase from './ShapeBase.js'
 import EfficiencyLevel from '../../EfficiencyLevel.js';
 
+const ImaginaryShapeUniqueId = Symbol('ImaginaryVertex');
 export default class ImaginaryShape extends ShapeBase {
     static get Id(){
-        return Symbol('ImaginaryVertex');
+        return ImaginaryShapeUniqueId;
     }
 
     constructor(imaginaryWidth, imaginaryHeight){
