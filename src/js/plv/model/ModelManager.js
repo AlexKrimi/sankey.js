@@ -1,11 +1,11 @@
-import Buffer from './ProductionLineEntities/Buffer.js';
-import Drain from './ProductionLineEntities/Drain.js';
-import Source from './ProductionLineEntities/Source.js';
-import Station from './ProductionLineEntities/Station.js';
-import EntityBase from './ProductionLineEntities/EntityBase.js';
-import EfficiencyLevel from './EfficiencyLevel.js';
+import Buffer from './domain/Buffer.js';
+import Drain from './domain/Drain.js';
+import Source from './domain/Source.js';
+import Station from './domain/Station.js';
+import EntityBase from './EntityBase.js';
+import EfficiencyLevel from './../EfficiencyLevel.js';
 
-export default class ProductionLineModel {
+export default class ModelManager {
     constructor(){
         this.verteces = [];
         this.edges = [];
@@ -44,11 +44,10 @@ export default class ProductionLineModel {
 
     AddEdge(vertexTuple){
         const isElementAlreadyAddedToModel =
-             this.edges.findIndex(
-                 existingVertex =>
+             this.edges.findIndex(existingVertex =>
                     existingVertex[0] === vertexTuple[0]
-                    && existingVertex[1] === vertexTuple[1])
-              !== -1;
+                    && existingVertex[1] === vertexTuple[1]
+                ) !== -1;
         if(isElementAlreadyAddedToModel){
             console.warn('Identical edge already added to the model.', vertexTuple);
             return;

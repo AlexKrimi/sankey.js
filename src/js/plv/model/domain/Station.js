@@ -1,4 +1,4 @@
-import EntityBase from './EntityBase.js'
+import EntityBase from './../EntityBase.js'
 
 export default class Station extends EntityBase {
     constructor(label, efficiencyLevel, efficiencyRelativeAmountLabel){

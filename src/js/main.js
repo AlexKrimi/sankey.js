@@ -1,5 +1,5 @@
 import EfficiencyLevel from './plv/EfficiencyLevel.js';
-import ProductionLineModel from './plv/ProductionLineModel.js';
+import ModelManager from './plv/model/ModelManager.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToVisualisationModel from './fromProductionModelToVisualisationModel.js';
 import renderGradients from './plv/util/renderGradients.js';
@@ -29,11 +29,11 @@ window.onload = function(){
      })();
 
     const canvas =
-        d3.select("body")
-        .append("svg")
-        .attr("id", 'canvas')
-        .attr("width", 2000)
-        .attr("height", 600);
+        d3.select('body')
+        .append('svg')
+        .attr('id', 'canvas')
+        .attr('width', 2000)
+        .attr('height', 600);
 
     const options = {
         alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
@@ -41,7 +41,7 @@ window.onload = function(){
         windowMarginLeft: 50,
         windowMarginTop: 50,
         elementMarginTop: 80,
-        elementMarginRight: 85
+        elementMarginRight: 85,
     };
 
     const productionLine = generateDummyProductionLine();
