@@ -3,13 +3,14 @@ import ProductionLineModel from './plv/ProductionLineModel.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToVisualisationModel from './fromProductionModelToVisualisationModel.js';
 import renderGradients from './plv/util/renderGradients.js';
+import transposeMatrix from './plv/util/transposeMatrix.js';
 import LayoutManager from './plv/visualisation/LayoutManager.js';
 import LinkManager from './plv/visualisation/LinkManager.js';
 
 import StationShape from './plv/visualisation/shapes/domain/Station.js';
-import Source from './plv/visualisation/shapes/domain/Source.js';
-import Drain from './plv/visualisation/shapes/domain/Drain.js';
-import Buffer from './plv/visualisation/shapes/domain/Buffer.js';
+import SourceShape from './plv/visualisation/shapes/domain/Source.js';
+import DrainShape from './plv/visualisation/shapes/domain/Drain.js';
+import BufferShape from './plv/visualisation/shapes/domain/Buffer.js';
 import ImaginaryShape from './plv/visualisation/shapes/ImaginaryShape.js';
 
 function loadSvgImage(filename){
@@ -56,9 +57,9 @@ window.onload = function(){
     const columnPartitions = fromProductionModelToVisualisationModel(productionLine);
     const transposedColumnPartitions = transposeMatrix(columnPartitions);
     const entityToShapeMap = {
-        'Buffer':  element => new Buffer(element.id, element.label, element.efficiencyLevel),
-        'Drain':   element => new Drain(element.id),
-        'Source':  element => new Source(element.id),
+        'Buffer':  element => new BufferShape(element.id, element.label, element.efficiencyLevel),
+        'Drain':   element => new DrainShape(element.id),
+        'Source':  element => new SourceShape(element.id),
         'Station': element => new StationShape(element.id, element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel),
     };
     let columnPartitionsWithShapes =
@@ -109,7 +110,6 @@ window.onload = function(){
                 if(hasVertecesPointingToItFromSameColumn(columnPartitionsWithShapes, currentVertex, columnIndex)){
                     firstColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
                     secondColumn.push(currentShape);
-
                 } else {
                     firstColumn.push(currentShape);
                     secondColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
@@ -139,22 +139,3 @@ window.onload = function(){
     }
 }
 
-// Takes matrix of dimensions m x n and transposes it to new matrix of dimensions n x m
-// n - number of rows of initial matrix
-// m - number of columns of initial matrix
-function transposeMatrix(originalMatrix){
-    if(!originalMatrix || !originalMatrix.length)
-        return [];
-
-    const originalRowCount = originalMatrix.length;
-    const originalColumnCount = Math.max(...originalMatrix.map(row => row.length));
-
-    const newMatrix = [];
-    for(let rowIndex = 0; rowIndex < originalRowCount; rowIndex++){
-        for(let columnIndex = 0; columnIndex < originalColumnCount; columnIndex++){
-            newMatrix[columnIndex] = newMatrix[columnIndex] || [];
-            newMatrix[columnIndex][rowIndex] = originalMatrix[rowIndex][columnIndex] || null;
-        }
-    }
-    return newMatrix;
-}

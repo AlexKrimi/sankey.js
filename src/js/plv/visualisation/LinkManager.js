@@ -16,13 +16,11 @@ export default function(productionLine, layoutedShapes, canvas){
         const allShapes =
             layoutedShapes
             .reduce(
-                (aggregate, current) => !!current ? aggregate.concat(current): aggregate,
-            [])
+                (aggregate, current) => !!current ? aggregate.concat(current) : aggregate,
+                []
+            )
             .filter(shape => !!shape);
-        debugger;
-        return function(id){
-            return allShapes.find(shape => shape.id === id);
-        }
+        return (id) => allShapes.find(shape => shape.id === id);
     })();
 
     const lineFunction =
@@ -32,7 +30,7 @@ export default function(productionLine, layoutedShapes, canvas){
         .curve(d3.curveBasis);
 
     function getMiddleY(shapeBounds){
-        return shapeBounds.y2 - (shapeBounds.y2 - shapeBounds.y1)/2
+        return shapeBounds.y2 - (shapeBounds.y2 - shapeBounds.y1)/2;
     }
     for(let fromVertex of productionLine.verteces){
         for(let toVertex of fromVertex.flowsTo){
