@@ -4,6 +4,7 @@ import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToVisualisationModel from './fromProductionModelToVisualisationModel.js';
 import renderGradients from './plv/util/renderGradients.js';
 import transposeMatrix from './plv/util/transposeMatrix.js';
+import loadSvgImage from './plv/util/loadSvgImage.js';
 import LayoutManager from './plv/visualisation/LayoutManager.js';
 import LinkManager from './plv/visualisation/LinkManager.js';
 
@@ -13,27 +14,18 @@ import DrainShape from './plv/visualisation/shapes/domain/Drain.js';
 import BufferShape from './plv/visualisation/shapes/domain/Buffer.js';
 import ImaginaryShape from './plv/visualisation/shapes/ImaginaryShape.js';
 
-function loadSvgImage(filename){
-    d3
-    .xml(`./src/images/${filename}.svg`)
-    .mimeType("image/svg+xml")
-    .get(function(error, xml) {
-        if (error) throw error;
-        document.body.appendChild(xml.documentElement);
-    });
-}
-
 window.onload = function(){
     (function loadExternalImages(){
-        var stationSvgSymbols = ['station-low', 'station-medium',  'station-high', 'station-not-available'];
-        for(let svgSymbol of stationSvgSymbols){
-            loadSvgImage(svgSymbol);
-        }
-
-        var bufferSvgSymbols = ['buffer-low', 'buffer-medium',  'buffer-high', 'buffer-not-available'];
-        for(let svgSymbol of bufferSvgSymbols){
-            loadSvgImage(svgSymbol);
-        }
+        const svgSymbolFilenames =
+            ['station-low',
+             'station-medium',
+             'station-high',
+             'station-not-available',
+             'buffer-low',
+             'buffer-medium',
+             'buffer-high',
+             'buffer-not-available'];
+        loadSvgImage(...svgSymbolFilenames);
      })();
 
     const canvas =
@@ -43,7 +35,7 @@ window.onload = function(){
         .attr("width", 2000)
         .attr("height", 600);
 
-    var options = {
+    const options = {
         alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
         verticalDistributionToCanvas: ['top', 'center'][1],
         windowMarginLeft: 50,
@@ -138,4 +130,3 @@ window.onload = function(){
         }
     }
 }
-

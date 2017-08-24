@@ -8,6 +8,7 @@ export default function renderGradients(svg){
     for (var index = 0; index < allNodes.length; index++) {
         var element = allNodes[index];
         var color = d3.interpolateRgb(element.dataset.gradientStart, element.dataset.gradientEnd);
+
         svg
         .selectAll('.flow')
         .data(quads(sampleSingle(element, 1)))
