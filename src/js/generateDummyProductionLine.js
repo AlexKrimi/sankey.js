@@ -2,7 +2,7 @@ import BufferEntity from './plv/model/domain/Buffer.js';
 import DrainEntity from './plv/model/domain/Drain.js';
 import SourceEntity from './plv/model/domain/Source.js';
 import StationEntity from './plv/model/domain/Station.js';
-import EfficiencyLevel from './plv/EfficiencyLevel.js';
+import EfficiencyLevel from './plv/model/EfficiencyLevel.js';
 import ModelManager from './plv/model/ModelManager.js';
 
 export default function (){

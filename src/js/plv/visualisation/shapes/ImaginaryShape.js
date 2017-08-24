@@ -1,5 +1,5 @@
 import ShapeBase from './ShapeBase.js'
-import EfficiencyLevel from '../../EfficiencyLevel.js';
+import EfficiencyLevel from './../../model/EfficiencyLevel.js';
 
 const ImaginaryShapeUniqueId = Symbol('ImaginaryVertex');
 export default class ImaginaryShape extends ShapeBase {

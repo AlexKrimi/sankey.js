@@ -3,7 +3,7 @@ import Drain from './domain/Drain.js';
 import Source from './domain/Source.js';
 import Station from './domain/Station.js';
 import EntityBase from './EntityBase.js';
-import EfficiencyLevel from './../EfficiencyLevel.js';
+import EfficiencyLevel from './EfficiencyLevel.js';
 
 export default class ModelManager {
     constructor(){

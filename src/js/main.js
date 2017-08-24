@@ -1,4 +1,4 @@
-import EfficiencyLevel from './plv/EfficiencyLevel.js';
+import EfficiencyLevel from './plv/model/EfficiencyLevel.js';
 import ModelManager from './plv/model/ModelManager.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToVisualisationModel from './fromProductionModelToVisualisationModel.js';

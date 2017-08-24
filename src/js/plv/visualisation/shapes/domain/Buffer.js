@@ -1,5 +1,5 @@
 import ShapeBase from '../ShapeBase.js'
-import EfficiencyLevel from '../../../EfficiencyLevel.js';
+import EfficiencyLevel from '../../../model/EfficiencyLevel.js';
 
 const bufferSvgIdCode = {};
 bufferSvgIdCode[EfficiencyLevel.Low] = '#buffer-low';
@@ -20,9 +20,9 @@ export default class Buffer extends ShapeBase {
 
     Render(){
         const group =
-        d3
-        .select('#canvas')
-        .append("g");
+            d3
+            .select('#canvas')
+            .append("g");
 
         group
             .append('use')

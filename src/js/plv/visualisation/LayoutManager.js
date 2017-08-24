@@ -2,7 +2,7 @@ import StationShape from '../visualisation/shapes/domain/Station.js';
 import Source from '../visualisation/shapes/domain/Source.js';
 import Drain from '../visualisation/shapes/domain/Drain.js';
 import Buffer from '../visualisation/shapes/domain/Buffer.js';
-import EfficiencyLevel from '../EfficiencyLevel.js';
+import EfficiencyLevel from './../model/EfficiencyLevel.js';
 
 export default function(options, columnPartitionsWithShapes){
     const layoutedShapes = columnPartitionsWithShapes;
