@@ -18,7 +18,7 @@ export default function (){
         s4  = new StationEntity('4FB02', EfficiencyLevel.High, '90%'),
         s5  = new StationEntity('5FC03', EfficiencyLevel.Low, '90%'),
         s6  = new StationEntity('6FC04', EfficiencyLevel.High, '90%'),
-        s7  = new StationEntity('7FD01', EfficiencyLevel.Medium, '90%'),
+        s7  = new StationEntity('7FD01', EfficiencyLevel.High, '90%'),
         s8  = new StationEntity('8KAR9605', EfficiencyLevel.Medium),
         s9  = new StationEntity('9MAN8695', EfficiencyLevel.High),
         s10 = new StationEntity('10FRS', EfficiencyLevel.Low, '20%'),
@@ -28,7 +28,7 @@ export default function (){
 
     const
         buffer1 = new BufferEntity('3/12', EfficiencyLevel.High),
-        buffer2 = new BufferEntity('80%', EfficiencyLevel.Low),
+        buffer2 = new BufferEntity('80%', EfficiencyLevel.Medium),
         buffer3 = new BufferEntity('10%', EfficiencyLevel.Medium);
 
     [source, drain, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, buffer1, buffer2, buffer3]
@@ -40,16 +40,16 @@ export default function (){
         [s2, buffer1],
 
             [buffer1, s3],
-            [ s3, s4],
+            [s3, s4],
                 [s4, s5],
                 [s4, s6],
                 [s5, s7],
                 [s6, s7],
 
             [buffer1, s8],
-            [s8, buffer2],
-            [buffer2, s9],
-            [s9, s10],
+            [s8, s9],
+            [s9, buffer2],
+            [buffer2, s10],
             [s10, s11],
 
         [s7, buffer3],
