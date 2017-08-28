@@ -1,6 +1,6 @@
 import ModelManager from './plv/model/ModelManager.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
-import fromProductionModelToVisualisationModel from './plv/visualisation/fromProductionModelToVisualisationModel.js';
+import fromProductionModelToColumnPartitionsForVisualization from './plv/visualisation/fromProductionModelToColumnPartitionsForVisualization.js';
 import normalizePartitions from './plv/visualisation/normalizePartitions.js';
 import renderGradients from './plv/util/renderGradients.js';
 import transposeMatrix from './plv/util/transposeMatrix.js';
@@ -46,7 +46,7 @@ window.onload = function(){
     const productionLine = generateDummyProductionLine();
     productionLine.IsValid();
     const source = productionLine.source;
-    const columnPartitions = fromProductionModelToVisualisationModel(productionLine);
+    const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(productionLine);
     const transposedColumnPartitions = transposeMatrix(columnPartitions);
     const entityToShapeMap = {
         'Buffer':  element => new BufferShape(element.id, element.label, element.efficiencyLevel),

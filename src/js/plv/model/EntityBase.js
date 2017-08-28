@@ -4,11 +4,4 @@ export default class EntityBase {
         this.flowsFrom = [];
         this.id = Symbol('Vertex');
     }
-
-    AddFlowTo(entity){
-        this.flowsTo.push(entity);
-    }
-    AddFlowFrom(entity){
-        this.flowsFrom.push(entity);
-    }
 }

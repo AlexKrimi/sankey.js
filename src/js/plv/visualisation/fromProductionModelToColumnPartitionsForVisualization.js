@@ -1,4 +1,4 @@
-export default function fromProductionModelToVisualisationModel(productionModel){
+export default function fromProductionModelToColumnPartitionsForVisualization(productionModel){
     const columns = [];
 
     function scanVertecesByOutgoingFlows(currentVertex, columnIndex){
