@@ -3,7 +3,7 @@ export default class Edge {
         this._from = from;
         this._to = to;
         this._intensity = intensity;
-        this._id = Symbol('Vertex');
+        this._id = Symbol('Edge');
     }
 
     get from(){ return this._from; }

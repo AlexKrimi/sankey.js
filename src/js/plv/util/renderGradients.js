@@ -8,7 +8,7 @@ export default function renderGradients(svg){
     for (var index = 0; index < allNodes.length; index++) {
         var element = allNodes[index];
         const color = d3.interpolateRgb(element.dataset.gradientStart, element.dataset.gradientEnd);
-        const intensity = Number(element.dataset.intensity) || 0;
+        const width = Number(element.dataset.width) || 0;
         // TODO Use height of shape with smallest height
         const MAX_WIDTH_OF_FLOW_LINE = 46;
 
@@ -19,7 +19,7 @@ export default function renderGradients(svg){
         .append('path')
         .style('fill', function (d) { return color(d.t); })
         .style('fill-opacity', 0.65)
-        .attr('d', function (d) { return lineJoin(d[0], d[1], d[2], d[3], MAX_WIDTH_OF_FLOW_LINE * intensity); });
+        .attr('d', function (d) { return lineJoin(d[0], d[1], d[2], d[3], width); });
     }
 }
 
