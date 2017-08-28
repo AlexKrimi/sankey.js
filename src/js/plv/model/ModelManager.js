@@ -3,6 +3,7 @@ import Drain from './domain/Drain.js';
 import Source from './domain/Source.js';
 import Station from './domain/Station.js';
 import EntityBase from './EntityBase.js';
+import Edge from './Edge.js';
 import EfficiencyLevel from './EfficiencyLevel.js';
 
 export default class ModelManager {
@@ -42,31 +43,44 @@ export default class ModelManager {
         return this;
     }
 
-    AddEdge(vertexTuple){
+    AddEdge(vertexTriplet){
+        const newFrom = vertexTriplet[0],
+              newTo = vertexTriplet[1],
+              newIntensity = vertexTriplet[2] || 0;
         const isElementAlreadyAddedToModel =
-             this.edges.findIndex(existingVertex =>
-                    existingVertex[0] === vertexTuple[0]
-                    && existingVertex[1] === vertexTuple[1]
+             this.edges.findIndex(existingEdge =>
+                    existingEdge.from === newFrom
+                    && existingEdge.to === newTo
                 ) !== -1;
         if(isElementAlreadyAddedToModel){
-            console.warn('Identical edge already added to the model.', vertexTuple);
+            console.warn('Identical edge already added to the model.', vertexTriplet);
             return;
         }
 
-        this.edges.push(vertexTuple);
-
-        const originNode = vertexTuple[0];
-        const targetNode = vertexTuple[1];
-        const indexOfOriginNode = this.verteces.indexOf(originNode);
-        const indexOfTargetNode = this.verteces.indexOf(targetNode);
+        const indexOfOriginNode = this.verteces.indexOf(newFrom);
+        const indexOfTargetNode = this.verteces.indexOf(newTo);
 
         if(indexOfOriginNode === -1)
             throw new Error(`Cannot create edge between two verteces if both of them are not previously added (registered) to the model. Cannot find origin node.`);
         if(indexOfTargetNode === -1)
             throw new Error(`Cannot create edge between two verteces if both of them are not previously added (registered) to the model. Cannot find target node.`);
+        if(newIntensity < 0)
+            throw new Error(`Intensity should be non-negative number. Found ${newIntensity} instead.`);
 
-        originNode.AddFlowTo(targetNode);
-        targetNode.AddFlowFrom(originNode);
+        this.edges.push(new Edge(newFrom, newTo, newIntensity));
+    }
+
+    GetOutgoingEdge(vertexId){
+        return this.edges.filter(edge => edge.from.id === vertexId);
+    }
+    GetOutgoingVertex(vertexId){
+        return this.GetOutgoingEdge(vertexId).map(edge => edge.to);
+    }
+    GetIncomingEdge(vertexId){
+        return this.edges.filter(edge => edge.to.id === vertexId);
+    }
+    GetIncomingVertex(vertexId){
+        return this.GetIncomingEdge(vertexId).map(edge => edge.from);
     }
 
     AddEdges(newVertexTuples){

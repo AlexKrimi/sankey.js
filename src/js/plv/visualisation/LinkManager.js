@@ -33,7 +33,7 @@ export default function(productionLine, layoutedShapes, canvas){
         return shapeBounds.y2 - (shapeBounds.y2 - shapeBounds.y1)/2;
     }
     for(let fromVertex of productionLine.verteces){
-        for(let toVertex of fromVertex.flowsTo){
+        for(let toVertex of productionLine.GetOutgoingVertex(fromVertex.id)){
             const fromShapeBounds = findShapeById(fromVertex.id).GetBoundingBox();
             const toShapeBounds = findShapeById(toVertex.id).GetBoundingBox();
             const distanceBetweenBounds = toShapeBounds.x1 - fromShapeBounds.x2;
@@ -41,7 +41,7 @@ export default function(productionLine, layoutedShapes, canvas){
             var lineData = [
                 { x: fromShapeBounds.x2,                                y: getMiddleY(fromShapeBounds) },
                 { x: fromShapeBounds.x2 + distanceBetweenBounds * 0.20, y: getMiddleY(fromShapeBounds) },
-                { x: toShapeBounds.x1 - distanceBetweenBounds * 0.20,   y: getMiddleY(toShapeBounds) },
+                { x: toShapeBounds.x1   - distanceBetweenBounds * 0.20, y: getMiddleY(toShapeBounds) },
                 { x: toShapeBounds.x1,                                  y: getMiddleY(toShapeBounds) }
             ];
 
@@ -53,11 +53,12 @@ export default function(productionLine, layoutedShapes, canvas){
                 .append('path')
                 .attr('d', lineFunction(lineData))
                 .attr('class', 'flow')
-                .attr("stroke", "gray")
-                .attr("stroke-width", 25)
                 .attr('data-gradient-start', colorCodeForLevel[fromVertex.efficiencyLevel])
                 .attr('data-gradient-end', colorCodeForLevel[toVertex.efficiencyLevel])
-                .attr("fill", "none");
+                // Not really important since it's going to be replaced by renderGradient metohd.
+                .attr('stroke', 'gray')
+                .attr('stroke-width', 10)
+                .attr('fill', 'none');
         }
     }
 }

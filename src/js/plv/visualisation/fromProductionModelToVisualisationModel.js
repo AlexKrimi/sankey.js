@@ -8,8 +8,10 @@ export default function fromProductionModelToVisualisationModel(productionModel)
 
         columns[columnIndex] = columns[columnIndex] || [];
         columns[columnIndex].push(currentVertex);
-        for(let nextVertex of currentVertex.flowsTo)
+        const outgoingVerteces = productionModel.GetOutgoingVertex(currentVertex.id)
+        for(let nextVertex of outgoingVerteces){
             scanVertecesByOutgoingFlows(nextVertex, columnIndex + 1);
+        }
     }
     scanVertecesByOutgoingFlows(productionModel.source, 0);
 

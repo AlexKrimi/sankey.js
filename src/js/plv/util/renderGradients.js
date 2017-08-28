@@ -7,7 +7,8 @@ export default function renderGradients(svg){
     let allNodes = path.nodes();
     for (var index = 0; index < allNodes.length; index++) {
         var element = allNodes[index];
-        var color = d3.interpolateRgb(element.dataset.gradientStart, element.dataset.gradientEnd);
+        const color = d3.interpolateRgb(element.dataset.gradientStart, element.dataset.gradientEnd);
+        const intensity = Number(element.dataset.intensity) || Math.random();
 
         svg
         .selectAll('.flow')
@@ -16,7 +17,7 @@ export default function renderGradients(svg){
         .append("path")
         .style("fill", function (d) { return color(d.t); })
         .style("fill-opacity", 0.7)
-        .attr("d", function (d) { return lineJoin(d[0], d[1], d[2], d[3], 32); });
+        .attr("d", function (d) { return lineJoin(d[0], d[1], d[2], d[3], 32 * intensity); });
     }
 }
 

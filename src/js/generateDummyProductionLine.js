@@ -35,28 +35,29 @@ export default function (){
     .forEach(vertex => modelManager.AddVertex(vertex));
 
     [
-        [source, s1],
-        [s1, s2],
-        [s2, buffer1],
+        [source, s1, 1.0],
+        [s1, s2, 1.0],
+        [s2, buffer1, 1.0],
 
-            [buffer1, s3],
-            [s3, s4],
-                [s4, s5],
-                [s4, s6],
-                [s5, s7],
-                [s6, s7],
+            [buffer1, s3, 0.5],
+            [s3, s4, 0.48],
+                [s4, s5, 0.28],
+                [s4, s6, 0.20],
 
-            [buffer1, s8],
-            [s8, s9],
-            [s9, buffer2],
-            [buffer2, s10],
-            [s10, s11],
+                [s5, s7, 0.3],
+                [s6, s7, 0.4],
 
-        [s7, buffer3],
-        [s11, buffer3],
-        [buffer3, s12],
-        [s12, s13],
-        [s13, drain],
+            [buffer1, s8, 0.5],
+            [s8, s9, 0.45],
+            [s9, buffer2, 0.40],
+            [buffer2, s10, 0.38],
+            [s10, s11, 0.35],
+
+        [s7, buffer3, 0.35],
+        [s11, buffer3, 0.30],
+        [buffer3, s12, 0.30],
+        [s12, s13, 0.30],
+        [s13, drain, 0.30],
     ].forEach(edge =>  modelManager.AddEdge(edge));
 
     return modelManager;

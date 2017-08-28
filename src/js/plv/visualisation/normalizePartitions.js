@@ -4,6 +4,7 @@ export default function normalize(columnPartitionsWithShapes, productionLine){
     const normalizedLayout = [];
     const numberOfRows = columnPartitionsWithShapes.length;
     const numberOfColumns = columnPartitionsWithShapes[0].length;
+
     const getColumnIndexByVertexId = function(matrix, id){
         for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
             for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
@@ -14,15 +15,15 @@ export default function normalize(columnPartitionsWithShapes, productionLine){
         }
         return -1;
     }
-    const hasVertecesPointingToItFromSameColumn = function(matrix, vertex, columnIndex){
-        const flowsFrom = vertex.flowsFrom;
-        return flowsFrom.some(
-            element =>
-                !!element
-                ? getColumnIndexByVertexId(matrix, element.id) === columnIndex
-                : false
-        );
+
+    const hasVertecesPointingToItFromSameColumn = function(matrix, destinationVertexId, columnIndex){
+        return productionLine
+            .GetIncomingEdge(destinationVertexId)
+            .some(
+                incomingEdge => getColumnIndexByVertexId(matrix, incomingEdge.from.id) === columnIndex
+            );
     }
+
     for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
         const firstColumn = [];
         const secondColumn = [];
@@ -35,7 +36,7 @@ export default function normalize(columnPartitionsWithShapes, productionLine){
             }
             const currentVertex = productionLine.Get(currentShape.id);
 
-            if(hasVertecesPointingToItFromSameColumn(columnPartitionsWithShapes, currentVertex, columnIndex)){
+            if(hasVertecesPointingToItFromSameColumn(columnPartitionsWithShapes, currentVertex.id, columnIndex)){
                 firstColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
                 secondColumn.push(currentShape);
             } else {

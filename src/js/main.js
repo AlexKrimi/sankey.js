@@ -44,6 +44,7 @@ window.onload = function(){
     };
 
     const productionLine = generateDummyProductionLine();
+    productionLine.IsValid();
     const source = productionLine.source;
     const columnPartitions = fromProductionModelToVisualisationModel(productionLine);
     const transposedColumnPartitions = transposeMatrix(columnPartitions);
