@@ -4,6 +4,7 @@ import Drain from '../visualisation/shapes/domain/Drain.js';
 import Buffer from '../visualisation/shapes/domain/Buffer.js';
 import EfficiencyLevel from './../model/EfficiencyLevel.js';
 
+// TODO refactor
 const colorCodeForLevel = {};
 colorCodeForLevel[EfficiencyLevel.Low] = '#F60A20';
 colorCodeForLevel[EfficiencyLevel.Medium] = '#FF7F00';
@@ -40,13 +41,10 @@ export default function(productionLine, layoutedShapes, canvas){
         .map(edge => edge.from.id)
         .uniq()
         .value();
-
     const leftLinkLocation = _.groupBy(productionLine.edges, edge => edge.from.id);
-
     const left = leftLinkUniqId
         .map(function(key){
-
-            var leftEdgeGroup = leftLinkLocation[key];
+            const leftEdgeGroup = leftLinkLocation[key];
             const newEdges = [];
             const totalHeight = leftEdgeGroup.reduce((aggregate, edge) => edge.intensity * MAX_WIDTH_OF_FLOW_LINE + aggregate, 0);
             const shape = findShapeById(leftEdgeGroup[0].from.id);
@@ -68,26 +66,25 @@ export default function(productionLine, layoutedShapes, canvas){
 
             return newEdges;
         });
+    const flatenedLeft = _.flatten(left);
 
     const toLinkUniqId =
         _(productionLine.edges)
         .map(edge => edge.to.id)
         .uniq()
         .value();
-
     const rightLinkLocation =
         _.groupBy(productionLine.edges, edge => edge.to.id);
-
     const right =
         toLinkUniqId
         .map(function(key){
-            var rightEdgeGroup = rightLinkLocation[key];
+            const rightEdgeGroup = rightLinkLocation[key];
             const newEdges = [];
             const totalHeight = rightEdgeGroup.reduce((aggregate, edge) => edge.intensity * MAX_WIDTH_OF_FLOW_LINE + aggregate, 0);
             const shape = findShapeById(rightEdgeGroup[0].to.id);
             const toShapeBounds = shape.GetBoundingBox();
             const toShapeMaxHeight = toShapeBounds.y2 - toShapeBounds.y1;
-            var accumulatedY =  toShapeBounds.y1 + (toShapeBounds.y2 - toShapeBounds.y1 - totalHeight) / 2 ;
+            let accumulatedY =  toShapeBounds.y1 + (toShapeBounds.y2 - toShapeBounds.y1 - totalHeight) / 2 ;
 
             for(let edge of rightEdgeGroup){
                 const x = toShapeBounds.x1;
@@ -102,11 +99,9 @@ export default function(productionLine, layoutedShapes, canvas){
 
             return newEdges;;
         });
+    const flatenedRight = _.flatten(right);
 
-    var flatenedLeft = _.flatten(left);
-    var flatenedRight = _.flatten(right);
-
-    var merge = [];
+    let merge = [];
     for(var leftObj of flatenedLeft){
         var rightObj = flatenedRight.find(x => x.id === leftObj.id);
         var edge = productionLine.edges.find(x => x.id === leftObj.id);
@@ -128,7 +123,7 @@ export default function(productionLine, layoutedShapes, canvas){
     }
 
     for(let edgeData of merge){
-        var lineData = [
+        const lineData = [
             { x: edgeData.from_X,                                         y: edgeData.from_Y },
             { x: edgeData.from_X + edgeData.distanceBetweenBounds * 0.20, y: edgeData.from_Y },
             { x: edgeData.to_X   - edgeData.distanceBetweenBounds * 0.20, y: edgeData.to_Y },
