@@ -21,61 +21,43 @@ const lineFunction =
 const MAX_FLOW_WIDTH = 46;
 
 export default function(productionLine, layoutedShapes, canvas){
-    const findShapeById = (function(){
-        const allShapes =
-            layoutedShapes
-            .reduce(
-                (aggregate, current) => !!current ? aggregate.concat(current) : aggregate,
-                []
-            )
-            .filter(shape => !!shape);
-        return (id) => allShapes.find(shape => shape.id === id);
-    })();
+    function getUniqVertexIdsByLinkHandSide(side){
+        const possibleSides = ['left', 'right'];
+        if(!possibleSides.includes(side))
+            throw new Error(`Expected 'left' or 'right' for side instead of ${side}`);
 
-    function getMiddleY(shapeBounds){
-        return shapeBounds.y2 - (shapeBounds.y2 - shapeBounds.y1) / 2;
+        const edgeSide = ({
+            left: 'from',
+            right: 'to'
+        })[side];
+
+        return _(productionLine.edges)
+            .map(edge => edge[edgeSide].id)
+            .uniq()
+            .value();
     }
 
-    const leftLinkUniqId =
-        _(productionLine.edges)
-        .map(edge => edge.from.id)
-        .uniq()
-        .value();
-    const leftLinkLocation = _.groupBy(productionLine.edges, edge => edge.from.id);
-    const left = leftLinkUniqId
-        .map(function(key){
-            const leftEdgeGroup = leftLinkLocation[key];
-            const newEdges = [];
-            const totalHeight = leftEdgeGroup.reduce((aggregate, edge) => edge.intensity * MAX_FLOW_WIDTH + aggregate, 0);
-            const shape = findShapeById(leftEdgeGroup[0].from.id);
-            const fromShapeBounds = shape.GetBoundingBox();
-            const fromShapeMaxHeight = fromShapeBounds.y2 - fromShapeBounds.y1;
-            let accumulatedY = fromShapeBounds.y1 + (fromShapeBounds.y2 - fromShapeBounds.y1 - totalHeight) / 2 ;
-
-            for(let edge of leftEdgeGroup){
-                const x = fromShapeBounds.x2;
-                const y = accumulatedY + edge.intensity * MAX_FLOW_WIDTH / 2;
-                newEdges.push({
-                    id: edge.id,
-                    from_X: x,
-                    from_Y: y,
-                });
-                accumulatedY = accumulatedY + edge.intensity * MAX_FLOW_WIDTH;
+    function* leftSidePositionForFlowsGenerator(groupOfLinksWithCommonLeftVertex, fromShapeBounds, totalFlowWidth){
+        const yGenerator = (function* (groupOfLinksWithCommonRightVertex){
+            let y =  fromShapeBounds.y1 + (fromShapeBounds.y2 - fromShapeBounds.y1 - totalFlowWidth) / 2 ;
+            for(let edge of groupOfLinksWithCommonRightVertex){
+                const currentFlowWidth = edge.intensity * MAX_FLOW_WIDTH;
+                yield y + currentFlowWidth / 2;
+                y = y + currentFlowWidth;
             }
+        })(groupOfLinksWithCommonLeftVertex);
 
-            return newEdges;
-        });
-    const leftSidePositionForFlows = _.flatten(left);
-
-    const linksGroupedByRightVertex =
-        _.groupBy(productionLine.edges, edge => edge.to.id);
-
-    const uniqIdsOfRightVerteces =
-        _(productionLine.edges)
-        .map(edge => edge.to.id)
-        .uniq()
-        .value();
-    const rightSidePositionForFlowsGenerator = function* (groupOfLinksWithCommonRightVertex, toShapeBounds, totalFlowWidth){
+        for(let edge of groupOfLinksWithCommonLeftVertex){
+            const x = fromShapeBounds.x2;
+            const y = yGenerator.next().value;
+            yield {
+                id: edge.id,
+                from_X: x,
+                from_Y: y,
+            };
+        }
+    };
+    function* rightSidePositionForFlowsGenerator(groupOfLinksWithCommonRightVertex, toShapeBounds, totalFlowWidth){
         const yGenerator = (function* (groupOfLinksWithCommonRightVertex){
             let y =  toShapeBounds.y1 + (toShapeBounds.y2 - toShapeBounds.y1 - totalFlowWidth) / 2 ;
             for(let edge of groupOfLinksWithCommonRightVertex){
@@ -95,8 +77,33 @@ export default function(productionLine, layoutedShapes, canvas){
             };
         }
     };
+
+    const findShapeById = (function(){
+        const allShapes =
+            layoutedShapes
+            .reduce(
+                (aggregate, current) => !!current ? aggregate.concat(current) : aggregate,
+                []
+            )
+            .filter(shape => !!shape);
+        return (id) => allShapes.find(shape => shape.id === id);
+    })();
+
+    const linksGroupedByLeftVertex = _.groupBy(productionLine.edges, edge => edge.from.id);
+    const leftSidePositionForFlows =
+        _(getUniqVertexIdsByLinkHandSide('left'))
+        .map(function(vertexId){
+            const groupOfLinksWithCommonLeftVertex = linksGroupedByLeftVertex[vertexId];
+            const totalFlowWidth = groupOfLinksWithCommonLeftVertex.reduce((aggregate, edge) => edge.intensity * MAX_FLOW_WIDTH + aggregate, 0);
+            const fromShapeBounds = findShapeById(vertexId).GetBoundingBox();
+            return [...leftSidePositionForFlowsGenerator(groupOfLinksWithCommonLeftVertex, fromShapeBounds, totalFlowWidth)];
+        })
+        .flatten()
+        .value();
+
+    const linksGroupedByRightVertex = _.groupBy(productionLine.edges, edge => edge.to.id);
     const rightSidePositionForFlows =
-        _(uniqIdsOfRightVerteces)
+        _(getUniqVertexIdsByLinkHandSide('right'))
         .map(function(vertexId){
             const groupOfLinksWithCommonRightVertex = linksGroupedByRightVertex[vertexId];
             const totalFlowWidth = groupOfLinksWithCommonRightVertex.reduce((aggregate, edge) => edge.intensity * MAX_FLOW_WIDTH + aggregate, 0);
