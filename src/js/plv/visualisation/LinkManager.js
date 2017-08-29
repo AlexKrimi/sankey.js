@@ -12,9 +12,15 @@ const colorCodeForLevel = {
     [null]:                   'gray'
 };
 
-export default function(productionLine, layoutedShapes, canvas){
-    const MAX_WIDTH_OF_FLOW_LINE = 46;
+const lineFunction =
+    d3.line()
+    .x(function(d) { return d.x; })
+    .y(function(d) { return d.y; })
+    .curve(d3.curveBasis);
 
+const MAX_FLOW_WIDTH = 46;
+
+export default function(productionLine, layoutedShapes, canvas){
     const findShapeById = (function(){
         const allShapes =
             layoutedShapes
@@ -25,12 +31,6 @@ export default function(productionLine, layoutedShapes, canvas){
             .filter(shape => !!shape);
         return (id) => allShapes.find(shape => shape.id === id);
     })();
-
-    const lineFunction =
-        d3.line()
-        .x(function(d) { return d.x; })
-        .y(function(d) { return d.y; })
-        .curve(d3.curveBasis);
 
     function getMiddleY(shapeBounds){
         return shapeBounds.y2 - (shapeBounds.y2 - shapeBounds.y1) / 2;
@@ -46,7 +46,7 @@ export default function(productionLine, layoutedShapes, canvas){
         .map(function(key){
             const leftEdgeGroup = leftLinkLocation[key];
             const newEdges = [];
-            const totalHeight = leftEdgeGroup.reduce((aggregate, edge) => edge.intensity * MAX_WIDTH_OF_FLOW_LINE + aggregate, 0);
+            const totalHeight = leftEdgeGroup.reduce((aggregate, edge) => edge.intensity * MAX_FLOW_WIDTH + aggregate, 0);
             const shape = findShapeById(leftEdgeGroup[0].from.id);
             const fromShapeBounds = shape.GetBoundingBox();
             const fromShapeMaxHeight = fromShapeBounds.y2 - fromShapeBounds.y1;
@@ -54,97 +54,103 @@ export default function(productionLine, layoutedShapes, canvas){
 
             for(let edge of leftEdgeGroup){
                 const x = fromShapeBounds.x2;
-                const y = accumulatedY + edge.intensity * MAX_WIDTH_OF_FLOW_LINE / 2;
+                const y = accumulatedY + edge.intensity * MAX_FLOW_WIDTH / 2;
                 newEdges.push({
                     id: edge.id,
                     from_X: x,
                     from_Y: y,
                 });
-                accumulatedY = accumulatedY + edge.intensity * MAX_WIDTH_OF_FLOW_LINE;
+                accumulatedY = accumulatedY + edge.intensity * MAX_FLOW_WIDTH;
             }
 
             return newEdges;
         });
-    const flatenedLeft = _.flatten(left);
+    const leftSidePositionForFlows = _.flatten(left);
 
-    const toLinkUniqId =
+    const linksGroupedByRightVertex =
+        _.groupBy(productionLine.edges, edge => edge.to.id);
+
+    const uniqIdsOfRightVerteces =
         _(productionLine.edges)
         .map(edge => edge.to.id)
         .uniq()
         .value();
-    const rightLinkLocation =
-        _.groupBy(productionLine.edges, edge => edge.to.id);
-    const right =
-        toLinkUniqId
-        .map(function(key){
-            const rightEdgeGroup = rightLinkLocation[key];
-            const newEdges = [];
-            const totalHeight = rightEdgeGroup.reduce((aggregate, edge) => edge.intensity * MAX_WIDTH_OF_FLOW_LINE + aggregate, 0);
-            const shape = findShapeById(rightEdgeGroup[0].to.id);
-            const toShapeBounds = shape.GetBoundingBox();
-            const toShapeMaxHeight = toShapeBounds.y2 - toShapeBounds.y1;
-            let accumulatedY =  toShapeBounds.y1 + (toShapeBounds.y2 - toShapeBounds.y1 - totalHeight) / 2 ;
-
-            for(let edge of rightEdgeGroup){
-                const x = toShapeBounds.x1;
-                const y = accumulatedY + edge.intensity * MAX_WIDTH_OF_FLOW_LINE / 2;
-                newEdges.push({
-                    id: edge.id,
-                    to_X: x,
-                    to_Y: y,
-                });
-                accumulatedY = accumulatedY + edge.intensity * MAX_WIDTH_OF_FLOW_LINE;
+    const rightSidePositionForFlowsGenerator = function* (groupOfLinksWithCommonRightVertex, toShapeBounds, totalFlowWidth){
+        const yGenerator = (function* (groupOfLinksWithCommonRightVertex){
+            let y =  toShapeBounds.y1 + (toShapeBounds.y2 - toShapeBounds.y1 - totalFlowWidth) / 2 ;
+            for(let edge of groupOfLinksWithCommonRightVertex){
+                const currentFlowWidth = edge.intensity * MAX_FLOW_WIDTH;
+                yield y + currentFlowWidth / 2;
+                y = y + currentFlowWidth;
             }
+        })(groupOfLinksWithCommonRightVertex);
 
-            return newEdges;
-        });
-    const flatenedRight = _.flatten(right);
+        for(let edge of groupOfLinksWithCommonRightVertex){
+            const x = toShapeBounds.x1;
+            const y = yGenerator.next().value;
+            yield {
+                id: edge.id,
+                to_X: x,
+                to_Y: y,
+            };
+        }
+    };
+    const rightSidePositionForFlows =
+        _(uniqIdsOfRightVerteces)
+        .map(function(vertexId){
+            const groupOfLinksWithCommonRightVertex = linksGroupedByRightVertex[vertexId];
+            const totalFlowWidth = groupOfLinksWithCommonRightVertex.reduce((aggregate, edge) => edge.intensity * MAX_FLOW_WIDTH + aggregate, 0);
+            const toShapeBounds = findShapeById(vertexId).GetBoundingBox();
+            return [...rightSidePositionForFlowsGenerator(groupOfLinksWithCommonRightVertex, toShapeBounds, totalFlowWidth)];
+        })
+        .flatten()
+        .value();
 
-    const merge = [];
-    for(let leftObj of flatenedLeft){
-        const rightObj = flatenedRight.find(x => x.id === leftObj.id);
-        const edge = productionLine.edges.find(x => x.id === leftObj.id);
-        const mergedObj = {
-            id: leftObj.id,
-            intensity: edge.intensity,
-            distanceBetweenBounds: rightObj.to_X - leftObj.from_X,
-            width: edge.intensity * MAX_WIDTH_OF_FLOW_LINE,
+    const linkDescriptionGenerator = (function* (){
+        for(let edge of productionLine.edges){
+            const leftPosition = leftSidePositionForFlows.find(x => x.id === edge.id);
+            const rightPosition = rightSidePositionForFlows.find(x => x.id === edge.id);
+            yield {
+                id: edge.id,
+                intensity: edge.intensity,
+                width: edge.intensity * MAX_FLOW_WIDTH,
+                distanceBetweenBounds: rightPosition.to_X - leftPosition.from_X,
 
-            from_X: leftObj.from_X,
-            from_Y: leftObj.from_Y,
-            from_efficiencyLevel: edge.from.efficiencyLevel,
+                ...leftPosition,
+                ...rightPosition,
+                from_efficiencyLevel: edge.from.efficiencyLevel,
+                to_efficiencyLevel: edge.to.efficiencyLevel,
+            };
+        }
+    })();
 
-            to_X: rightObj.to_X,
-            to_Y: rightObj.to_Y,
-            to_efficiencyLevel: edge.to.efficiencyLevel,
-        };
-        merge.push(mergedObj);
-    }
+    (function render(){
+        for(let edgeData of [...linkDescriptionGenerator]){
+            const lengthOfStraightPart = edgeData.distanceBetweenBounds * 0.20;
+            const lineData = [
+                { x: edgeData.from_X,                        y: edgeData.from_Y },
+                { x: edgeData.from_X + lengthOfStraightPart, y: edgeData.from_Y },
+                { x: edgeData.to_X   - lengthOfStraightPart, y: edgeData.to_Y },
+                { x: edgeData.to_X,                          y: edgeData.to_Y }
+            ];
 
-    for(let edgeData of merge){
-        const lineData = [
-            { x: edgeData.from_X,                                         y: edgeData.from_Y },
-            { x: edgeData.from_X + edgeData.distanceBetweenBounds * 0.20, y: edgeData.from_Y },
-            { x: edgeData.to_X   - edgeData.distanceBetweenBounds * 0.20, y: edgeData.to_Y },
-            { x: edgeData.to_X,                                           y: edgeData.to_Y }
-        ];
+            const flowGroup =
+                canvas
+                .append('g')
+                .attr('class', 'flowGroup');
 
-        const flowGroup =
-            canvas
-            .append('g')
-            .attr('class', 'flowGroup');
-
-        flowGroup
-            .append('path')
-            .attr('d', lineFunction(lineData))
-            .attr('class', 'flow')
-            .attr('data-gradient-start', colorCodeForLevel[edgeData.from_efficiencyLevel])
-            .attr('data-gradient-end', colorCodeForLevel[edgeData.to_efficiencyLevel])
-            .attr('data-intensity', edgeData.intensity || 0)
-            .attr('data-width', edgeData.width || 0)
-            // Not really important since it's going to be replaced by renderGradient metohd.
-            .attr('stroke', 'gray')
-            .attr('stroke-width', 10)
-            .attr('fill', 'none');
-    }
+            flowGroup
+                .append('path')
+                .attr('d', lineFunction(lineData))
+                .attr('class', 'flow')
+                .attr('data-gradient-start', colorCodeForLevel[edgeData.from_efficiencyLevel])
+                .attr('data-gradient-end', colorCodeForLevel[edgeData.to_efficiencyLevel])
+                .attr('data-intensity', edgeData.intensity || 0)
+                .attr('data-width', edgeData.width || 0)
+                // Not really important since it's going to be replaced by renderGradient metohd.
+                .attr('stroke', 'gray')
+                .attr('stroke-width', 10)
+                .attr('fill', 'none');
+        }
+    })();
 }
