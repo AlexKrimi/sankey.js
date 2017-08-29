@@ -1,12 +1,13 @@
 import ShapeBase from '../ShapeBase.js'
 import EfficiencyLevel from '../../../model/EfficiencyLevel.js';
 
-const stationSvgIdCode = {};
-stationSvgIdCode[EfficiencyLevel.Low] = '#station-low';
-stationSvgIdCode[EfficiencyLevel.Medium] = '#station-medium';
-stationSvgIdCode[EfficiencyLevel.High] = '#station-high';
-stationSvgIdCode[undefined] = '#station-not-available';
-stationSvgIdCode[null] = '#station-not-available';
+const stationSvgIdCode = {
+    [EfficiencyLevel.Low]:    '#station-low',
+    [EfficiencyLevel.Medium]: '#station-medium',
+    [EfficiencyLevel.High]:   '#station-high',
+    [undefined]:              '#station-not-available',
+    [null]:                   '#station-not-available',
+};
 
 export default class Station extends ShapeBase {
     constructor(id, label, efficiencyLevel, efficiencyRelativeAmountLabel){

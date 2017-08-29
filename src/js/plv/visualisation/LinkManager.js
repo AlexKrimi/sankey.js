@@ -4,15 +4,17 @@ import Drain from '../visualisation/shapes/domain/Drain.js';
 import Buffer from '../visualisation/shapes/domain/Buffer.js';
 import EfficiencyLevel from './../model/EfficiencyLevel.js';
 
-// TODO refactor
-const colorCodeForLevel = {};
-colorCodeForLevel[EfficiencyLevel.Low] = '#F60A20';
-colorCodeForLevel[EfficiencyLevel.Medium] = '#FF7F00';
-colorCodeForLevel[EfficiencyLevel.High] = '#8fb239';
-colorCodeForLevel[undefined] = 'gray';
-colorCodeForLevel[null] = 'gray';
+const colorCodeForLevel = {
+    [EfficiencyLevel.Low]:    '#F60A20',
+    [EfficiencyLevel.Medium]: '#FF7F00',
+    [EfficiencyLevel.High]:   '#8fb239',
+    [undefined]:              'gray',
+    [null]:                   'gray'
+};
 
 export default function(productionLine, layoutedShapes, canvas){
+    const MAX_WIDTH_OF_FLOW_LINE = 46;
+
     const findShapeById = (function(){
         const allShapes =
             layoutedShapes
@@ -34,8 +36,6 @@ export default function(productionLine, layoutedShapes, canvas){
         return shapeBounds.y2 - (shapeBounds.y2 - shapeBounds.y1) / 2;
     }
 
-    const MAX_WIDTH_OF_FLOW_LINE = 46;
-
     const leftLinkUniqId =
         _(productionLine.edges)
         .map(edge => edge.from.id)
@@ -50,8 +50,7 @@ export default function(productionLine, layoutedShapes, canvas){
             const shape = findShapeById(leftEdgeGroup[0].from.id);
             const fromShapeBounds = shape.GetBoundingBox();
             const fromShapeMaxHeight = fromShapeBounds.y2 - fromShapeBounds.y1;
-
-            var accumulatedY = fromShapeBounds.y1 + (fromShapeBounds.y2 - fromShapeBounds.y1 - totalHeight) / 2 ;
+            let accumulatedY = fromShapeBounds.y1 + (fromShapeBounds.y2 - fromShapeBounds.y1 - totalHeight) / 2 ;
 
             for(let edge of leftEdgeGroup){
                 const x = fromShapeBounds.x2;
@@ -97,15 +96,15 @@ export default function(productionLine, layoutedShapes, canvas){
                 accumulatedY = accumulatedY + edge.intensity * MAX_WIDTH_OF_FLOW_LINE;
             }
 
-            return newEdges;;
+            return newEdges;
         });
     const flatenedRight = _.flatten(right);
 
-    let merge = [];
-    for(var leftObj of flatenedLeft){
-        var rightObj = flatenedRight.find(x => x.id === leftObj.id);
-        var edge = productionLine.edges.find(x => x.id === leftObj.id);
-        var mergedObj = {
+    const merge = [];
+    for(let leftObj of flatenedLeft){
+        const rightObj = flatenedRight.find(x => x.id === leftObj.id);
+        const edge = productionLine.edges.find(x => x.id === leftObj.id);
+        const mergedObj = {
             id: leftObj.id,
             intensity: edge.intensity,
             distanceBetweenBounds: rightObj.to_X - leftObj.from_X,
@@ -130,7 +129,8 @@ export default function(productionLine, layoutedShapes, canvas){
             { x: edgeData.to_X,                                           y: edgeData.to_Y }
         ];
 
-        const flowGroup = canvas
+        const flowGroup =
+            canvas
             .append('g')
             .attr('class', 'flowGroup');
 
