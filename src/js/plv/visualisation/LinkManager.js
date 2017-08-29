@@ -37,16 +37,16 @@ export default function(productionLine, layoutedShapes, canvas){
             .value();
     }
 
+    function* yPositionGenerator(groupOfLinksWithCommonSideOfVertex, shapeBounds, totalFlowWidth){
+        let y =  shapeBounds.y1 + (shapeBounds.y2 - shapeBounds.y1 - totalFlowWidth) / 2;
+        for(let edge of groupOfLinksWithCommonSideOfVertex){
+            const currentFlowWidth = edge.intensity * MAX_FLOW_WIDTH;
+            yield y + currentFlowWidth / 2;
+            y = y + currentFlowWidth;
+        }
+    }
     function* leftSidePositionForFlowsGenerator(groupOfLinksWithCommonLeftVertex, fromShapeBounds, totalFlowWidth){
-        const yGenerator = (function* (groupOfLinksWithCommonRightVertex){
-            let y =  fromShapeBounds.y1 + (fromShapeBounds.y2 - fromShapeBounds.y1 - totalFlowWidth) / 2 ;
-            for(let edge of groupOfLinksWithCommonRightVertex){
-                const currentFlowWidth = edge.intensity * MAX_FLOW_WIDTH;
-                yield y + currentFlowWidth / 2;
-                y = y + currentFlowWidth;
-            }
-        })(groupOfLinksWithCommonLeftVertex);
-
+        const yGenerator = yPositionGenerator(groupOfLinksWithCommonLeftVertex, fromShapeBounds, totalFlowWidth);
         for(let edge of groupOfLinksWithCommonLeftVertex){
             const x = fromShapeBounds.x2;
             const y = yGenerator.next().value;
@@ -58,15 +58,7 @@ export default function(productionLine, layoutedShapes, canvas){
         }
     };
     function* rightSidePositionForFlowsGenerator(groupOfLinksWithCommonRightVertex, toShapeBounds, totalFlowWidth){
-        const yGenerator = (function* (groupOfLinksWithCommonRightVertex){
-            let y =  toShapeBounds.y1 + (toShapeBounds.y2 - toShapeBounds.y1 - totalFlowWidth) / 2 ;
-            for(let edge of groupOfLinksWithCommonRightVertex){
-                const currentFlowWidth = edge.intensity * MAX_FLOW_WIDTH;
-                yield y + currentFlowWidth / 2;
-                y = y + currentFlowWidth;
-            }
-        })(groupOfLinksWithCommonRightVertex);
-
+        const yGenerator = yPositionGenerator(groupOfLinksWithCommonRightVertex, toShapeBounds, totalFlowWidth);
         for(let edge of groupOfLinksWithCommonRightVertex){
             const x = toShapeBounds.x1;
             const y = yGenerator.next().value;
