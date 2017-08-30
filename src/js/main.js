@@ -3,6 +3,7 @@ import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToColumnPartitionsForVisualization from './plv/visualisation/fromProductionModelToColumnPartitionsForVisualization.js';
 import normalizePartitions from './plv/visualisation/normalizePartitions.js';
 import renderGradients from './plv/util/renderGradients.js';
+import renderShapes from './plv/visualisation/renderShapes.js';
 import transposeMatrix from './plv/util/transposeMatrix.js';
 import loadSvgImage from './plv/util/loadSvgImage.js';
 import applyLayout from './plv/visualisation/applyLayout.js';
@@ -41,37 +42,31 @@ window.onload = function(){
         windowMarginTop: 50,
         elementMarginTop: 80,
         elementMarginRight: 85,
-        maxFlowWidth: 46
+        maxFlowWidth: 46,
+        entityToShapeMap: {
+            'Buffer':  entity => new BufferShape(entity.id, entity.label, entity.efficiencyLevel),
+            'Drain':   entity => new DrainShape(entity.id),
+            'Source':  entity => new SourceShape(entity.id),
+            'Station': entity => new StationShape(entity.id, entity.label, entity.efficiencyLevel, entity.efficiencyRelativeAmountLabel),
+        }
     };
 
     const productionLine = generateDummyProductionLine();
     productionLine.IsValid();
-    const source = productionLine.source;
     const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(productionLine);
     const transposedColumnPartitions = transposeMatrix(columnPartitions);
-    const entityToShapeMap = {
-        'Buffer':  element => new BufferShape(element.id, element.label, element.efficiencyLevel),
-        'Drain':   element => new DrainShape(element.id),
-        'Source':  element => new SourceShape(element.id),
-        'Station': element => new StationShape(element.id, element.label, element.efficiencyLevel, element.efficiencyRelativeAmountLabel),
-    };
     let columnPartitionsWithShapes =
-        transposedColumnPartitions.map(
-            column => column.map(
-                element =>
-                    !!element
-                    ? entityToShapeMap[element.constructor.name](element)
-                    : null
-            )
-        );
+            transposedColumnPartitions.map(
+                column => column.map(
+                    entity =>
+                        !!entity
+                        ? options.entityToShapeMap[entity.constructor.name](entity)
+                        : null
+                )
+            );
     normalizePartitions(columnPartitionsWithShapes, productionLine);
     applyLayout(options, columnPartitionsWithShapes);
     renderLinks(productionLine, columnPartitionsWithShapes, canvas, options);
     renderGradients(canvas);
-
-    for(let row of columnPartitionsWithShapes){
-        for(let element of row){
-            element && element.Render(canvas);
-        }
-    }
+    renderShapes(columnPartitionsWithShapes, canvas);
 }
