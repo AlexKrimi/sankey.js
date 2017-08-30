@@ -7,6 +7,7 @@ import transposeMatrix from './plv/util/transposeMatrix.js';
 import loadSvgImage from './plv/util/loadSvgImage.js';
 import applyLayout from './plv/visualisation/applyLayout.js';
 import renderLinks from './plv/visualisation/renderLinks.js';
+import mapEntityPartitionsToShapePartitions from './plv/visualisation/mapEntityPartitionsToShapePartitions.js';
 import renderShapes from './plv/visualisation/renderShapes.js';
 
 import StationShape from './plv/visualisation/shapes/domain/Station.js';
@@ -55,17 +56,7 @@ window.onload = function(){
     productionLine.IsValid();
     const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(productionLine);
     const transposedColumnPartitions = transposeMatrix(columnPartitions);
-    let columnPartitionsWithShapes =
-        transposedColumnPartitions.map(
-            column => column.map(
-                element =>
-                    !!element
-                    ? options.entityToShapeMap[element.constructor.name](element)
-                    : null
-            )
-        );
-    columnPartitionsWithShapes.RowCount = columnPartitionsWithShapes.length;
-    columnPartitionsWithShapes.ColumnCount = columnPartitionsWithShapes[0].length;
+    let columnPartitionsWithShapes = mapEntityPartitionsToShapePartitions(transposedColumnPartitions, options);
     columnPartitionsWithShapes = getNormalizedPartitions(columnPartitionsWithShapes, productionLine);
     applyLayout(options, columnPartitionsWithShapes);
     renderLinks(productionLine, columnPartitionsWithShapes, canvas, options);
