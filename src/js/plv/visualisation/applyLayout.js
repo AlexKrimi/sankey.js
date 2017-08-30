@@ -25,7 +25,7 @@ function getMaxWidthForColumn(layoutedShapes, columnIndex){
     if(!layoutedShapes[0][columnIndex]){
         return 0;
     }
-    var column = layoutedShapes.map(row => row[columnIndex]);
+    const column = layoutedShapes.map(row => row[columnIndex]);
     return Math.max(...column.map(element => element ? element.width : 0));
 }
 
@@ -42,7 +42,7 @@ function applyRelativeAlignmentToOtherElementsInSameColumn(options, layoutedShap
     else if(options.alignToOtherElementsInTheSameColumn === 'left')
         alignToOtherElementsInTheSameColumn_left(options, layoutedShapes);
     else
-        throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
+        throw new Error(`Incorrect =lue for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
 }
 
 function alignToOtherElementsInTheSameColumn_center(options, layoutedShapes){
@@ -108,42 +108,44 @@ function verticalDistributionToCanvas_top(options, layoutedShapes){
 
 
 function verticalDistributionToCanvas_center(options, layoutedShapes){
-    const columnBoudingBoxes = [];
+    function applyEvenVerticalDistribution(){
+        for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
+            let yPosition =  options.windowMarginTop;
+            for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
+                if(layoutedShapes[rowIndex][columnIndex] === null){
+                    continue;
+                }
 
-    for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
-        let yPosition =  options.windowMarginTop;
-        for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
-            if(layoutedShapes[rowIndex][columnIndex] === null){
-                continue;
+                layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
+                yPosition = yPosition + layoutedShapes[rowIndex][columnIndex].height + options.elementMarginTop;
             }
-
-            layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
-            yPosition = yPosition + layoutedShapes[rowIndex][columnIndex].height + options.elementMarginTop;
         }
-    }
+    };
 
-    for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
-        const columnElementBoundingBox = {
-            x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
-            y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
-            x2: 0,
-            y2: 0
-        };
+    function* columnBoudingBoxesGenerator(){
+        for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
+            const columnElementBoundingBox = {
+                x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
+                y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
+                x2: 0,
+                y2: 0
+            };
 
-        for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
-            if(!layoutedShapes[rowIndex][columnIndex]){
-                continue;
+            for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
+                if(!layoutedShapes[rowIndex][columnIndex]){
+                    continue;
+                }
+                const currentBounding = layoutedShapes[rowIndex][columnIndex].GetBoundingBox();
+                columnElementBoundingBox.x2 = currentBounding.x2;
+                columnElementBoundingBox.y2 = currentBounding.y2;
             }
-            const currentBounding = layoutedShapes[rowIndex][columnIndex].GetBoundingBox();
-            columnElementBoundingBox.x2 = currentBounding.x2;
-            columnElementBoundingBox.y2 = currentBounding.y2;
+            yield columnElementBoundingBox;
         }
+    };
 
-        columnBoudingBoxes.push(columnElementBoundingBox);
-    }
-
+    applyEvenVerticalDistribution();
+    const columnBoudingBoxes = [...columnBoudingBoxesGenerator()];
     const maxColumnBoundingBoxHeight = Math.max(...columnBoudingBoxes.map(columnBox => columnBox.y2 - columnBox.y1));
-
     for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
         const deltaY = (maxColumnBoundingBoxHeight - (columnBoudingBoxes[columnIndex].y2 - columnBoudingBoxes[columnIndex].y1))/2;
         for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
