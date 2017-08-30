@@ -1,13 +1,13 @@
 import ModelManager from './plv/model/ModelManager.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToColumnPartitionsForVisualization from './plv/visualisation/fromProductionModelToColumnPartitionsForVisualization.js';
-import normalizePartitions from './plv/visualisation/normalizePartitions.js';
+import getNormalizedPartitions from './plv/visualisation/getNormalizedPartitions.js';
 import renderGradients from './plv/util/renderGradients.js';
-import renderShapes from './plv/visualisation/renderShapes.js';
 import transposeMatrix from './plv/util/transposeMatrix.js';
 import loadSvgImage from './plv/util/loadSvgImage.js';
 import applyLayout from './plv/visualisation/applyLayout.js';
 import renderLinks from './plv/visualisation/renderLinks.js';
+import renderShapes from './plv/visualisation/renderShapes.js';
 
 import StationShape from './plv/visualisation/shapes/domain/Station.js';
 import SourceShape from './plv/visualisation/shapes/domain/Source.js';
@@ -56,15 +56,17 @@ window.onload = function(){
     const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(productionLine);
     const transposedColumnPartitions = transposeMatrix(columnPartitions);
     let columnPartitionsWithShapes =
-            transposedColumnPartitions.map(
-                column => column.map(
-                    entity =>
-                        !!entity
-                        ? options.entityToShapeMap[entity.constructor.name](entity)
-                        : null
-                )
-            );
-    normalizePartitions(columnPartitionsWithShapes, productionLine);
+        transposedColumnPartitions.map(
+            column => column.map(
+                element =>
+                    !!element
+                    ? options.entityToShapeMap[element.constructor.name](element)
+                    : null
+            )
+        );
+    columnPartitionsWithShapes.RowCount = columnPartitionsWithShapes.length;
+    columnPartitionsWithShapes.ColumnCount = columnPartitionsWithShapes[0].length;
+    columnPartitionsWithShapes = getNormalizedPartitions(columnPartitionsWithShapes, productionLine);
     applyLayout(options, columnPartitionsWithShapes);
     renderLinks(productionLine, columnPartitionsWithShapes, canvas, options);
     renderGradients(canvas);

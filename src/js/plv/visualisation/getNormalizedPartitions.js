@@ -1,13 +1,11 @@
 import ImaginaryShape from './shapes/ImaginaryShape.js';
 
-export default function normalize(columnPartitionsWithShapes, productionLine){
+export default function getNormalizedPartitions(columnPartitionsWithShapes, productionLine){
     const normalizedLayout = [];
-    const numberOfRows = columnPartitionsWithShapes.length;
-    const numberOfColumns = columnPartitionsWithShapes[0].length;
 
     const getColumnIndexByVertexId = function(matrix, id){
-        for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
-            for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
+        for(let rowIndex = 0; rowIndex < columnPartitionsWithShapes.RowCount; rowIndex++){
+            for(let columnIndex = 0; columnIndex < columnPartitionsWithShapes.ColumnCount; columnIndex++){
                 const element = matrix[rowIndex][columnIndex];
                 if(element && element.id === id)
                     return columnIndex;
@@ -24,10 +22,10 @@ export default function normalize(columnPartitionsWithShapes, productionLine){
             );
     }
 
-    for(let columnIndex = 0; columnIndex < numberOfColumns; columnIndex++){
+    for(let columnIndex = 0; columnIndex < columnPartitionsWithShapes.ColumnCount; columnIndex++){
         const firstColumn = [];
         const secondColumn = [];
-        for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+        for(let rowIndex = 0; rowIndex < columnPartitionsWithShapes.RowCount; rowIndex++){
             const currentShape = columnPartitionsWithShapes[rowIndex][columnIndex];
             if(currentShape === null){
                 firstColumn.push(null);
@@ -44,14 +42,15 @@ export default function normalize(columnPartitionsWithShapes, productionLine){
                 secondColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
             }
         }
-        const secondColumnShouldBeAdded = secondColumn.some(x => !!x && x.id !== ImaginaryShape.Id);
+        const secondColumnShouldBeAdded = secondColumn.some(shape => shape && shape.id !== ImaginaryShape.Id);
 
-        for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++){
+        for(let rowIndex = 0; rowIndex < columnPartitionsWithShapes.RowCount; rowIndex++){
             normalizedLayout[rowIndex] = normalizedLayout[rowIndex] || [];
             normalizedLayout[rowIndex].push(firstColumn[rowIndex]);
             if(secondColumnShouldBeAdded)
                 normalizedLayout[rowIndex].push(secondColumn[rowIndex]);
         }
     }
+
     return normalizedLayout;
 }
