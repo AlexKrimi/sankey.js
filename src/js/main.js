@@ -5,7 +5,7 @@ import normalizePartitions from './plv/visualisation/normalizePartitions.js';
 import renderGradients from './plv/util/renderGradients.js';
 import transposeMatrix from './plv/util/transposeMatrix.js';
 import loadSvgImage from './plv/util/loadSvgImage.js';
-import LayoutManager from './plv/visualisation/LayoutManager.js';
+import applyLayout from './plv/visualisation/applyLayout.js';
 import renderLinks from './plv/visualisation/renderLinks.js';
 
 import StationShape from './plv/visualisation/shapes/domain/Station.js';
@@ -64,14 +64,12 @@ window.onload = function(){
                     : null
             )
         );
-    columnPartitionsWithShapes = normalizePartitions(columnPartitionsWithShapes, productionLine);
-
-    const layoutedShapes = LayoutManager(options, columnPartitionsWithShapes);
-
-    renderLinks(productionLine, layoutedShapes, canvas, options);
+    normalizePartitions(columnPartitionsWithShapes, productionLine);
+    applyLayout(options, columnPartitionsWithShapes);
+    renderLinks(productionLine, columnPartitionsWithShapes, canvas, options);
     renderGradients(canvas);
 
-    for(let row of layoutedShapes){
+    for(let row of columnPartitionsWithShapes){
         for(let element of row){
             element && element.Render(canvas);
         }

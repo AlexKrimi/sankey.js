@@ -4,8 +4,7 @@ import Drain from '../visualisation/shapes/domain/Drain.js';
 import Buffer from '../visualisation/shapes/domain/Buffer.js';
 import EfficiencyLevel from './../model/EfficiencyLevel.js';
 
-export default function(options, columnPartitionsWithShapes){
-    const layoutedShapes = columnPartitionsWithShapes;
+export default function applyLayout(options, layoutedShapes){
     layoutedShapes.RowCount =  layoutedShapes.length;
     if(!layoutedShapes.RowCount)
         throw new Error(`layoutedShapes > Expected more than 0 rows but found 0 rows.`);
@@ -13,28 +12,14 @@ export default function(options, columnPartitionsWithShapes){
     if(!layoutedShapes.ColumnCount)
         throw new Error(`layoutedShapes > Expected more than 0 columns but found 0 columns.`);
     for(let row = 0; row < layoutedShapes.RowCount; row++){
-        for(let column = 0; column < layoutedShapes.ColumnCount; column++){
-            if(layoutedShapes[row].length != layoutedShapes.ColumnCount)
-                throw new Error(`layoutedShapes > Expected rectangular 2D array with ${layoutedShapes.RowCount} rows an ${layoutedShapes.ColumnCount} columns. Found row with ${layoutedShapes[row].length} instead.`);
-        }
+        if(layoutedShapes[row].length != layoutedShapes.ColumnCount)
+            throw new Error(`layoutedShapes > Expected rectangular 2D array with ${layoutedShapes.RowCount} rows an ${layoutedShapes.ColumnCount} columns. Found row with ${layoutedShapes[row].length} instead.`);
     }
 
-    if(options.alignToOtherElementsInTheSameColumn === 'center')
-        alignToOtherElementsInTheSameColumn_center(options, layoutedShapes);
-    else if(options.alignToOtherElementsInTheSameColumn === 'left')
-        alignToOtherElementsInTheSameColumn_left(options, layoutedShapes);
-    else
-        throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
-
-    if(options.verticalDistributionToCanvas === 'top')
-        verticalDistributionToCanvas_top(options, layoutedShapes);
-    else if(options.verticalDistributionToCanvas === 'center')
-        verticalDistributionToCanvas_center(options, layoutedShapes);
-    else
-        throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
-
-    return layoutedShapes;
+    applyRelativeAlignmentToOtherElementsInSameColumn(options, layoutedShapes);
+    applyVerticalDistribution(options, layoutedShapes)
 }
+
 
 function getMaxWidthForColumn(layoutedShapes, columnIndex){
     if(!layoutedShapes[0][columnIndex]){
@@ -48,6 +33,16 @@ function getMaxHeightForRow(layoutedShapes, rowIndex){
     if(!layoutedShapes[rowIndex])
         return 0;
     return Math.max(...layoutedShapes[rowIndex].map(element => element ? element.height : 0));
+}
+
+
+function applyRelativeAlignmentToOtherElementsInSameColumn(options, layoutedShapes){
+    if(options.alignToOtherElementsInTheSameColumn === 'center')
+        alignToOtherElementsInTheSameColumn_center(options, layoutedShapes);
+    else if(options.alignToOtherElementsInTheSameColumn === 'left')
+        alignToOtherElementsInTheSameColumn_left(options, layoutedShapes);
+    else
+        throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
 }
 
 function alignToOtherElementsInTheSameColumn_center(options, layoutedShapes){
@@ -88,6 +83,16 @@ function alignToOtherElementsInTheSameColumn_left(options, layoutedShapes){
     }
 }
 
+
+function applyVerticalDistribution(options, layoutedShapes){
+    if(options.verticalDistributionToCanvas === 'top')
+        verticalDistributionToCanvas_top(options, layoutedShapes);
+    else if(options.verticalDistributionToCanvas === 'center')
+        verticalDistributionToCanvas_center(options, layoutedShapes);
+    else
+        throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
+}
+
 function verticalDistributionToCanvas_top(options, layoutedShapes){
     let yPosition = options.windowMarginTop;
     for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
@@ -100,6 +105,7 @@ function verticalDistributionToCanvas_top(options, layoutedShapes){
         yPosition = yPosition + getMaxHeightForRow(layoutedShapes, rowIndex) + options.elementMarginTop;
     }
 }
+
 
 function verticalDistributionToCanvas_center(options, layoutedShapes){
     const columnBoudingBoxes = [];
@@ -117,7 +123,7 @@ function verticalDistributionToCanvas_center(options, layoutedShapes){
     }
 
     for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
-        var columnElementBoundingBox = {
+        const columnElementBoundingBox = {
             x1: layoutedShapes[0][columnIndex].GetBoundingBox().x1,
             y1: layoutedShapes[0][columnIndex].GetBoundingBox().y1,
             x2: 0,
