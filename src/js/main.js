@@ -9,6 +9,7 @@ import applyLayout from './plv/visualisation/applyLayout.js';
 import renderLinks from './plv/visualisation/renderLinks.js';
 import mapEntityPartitionsToShapePartitions from './plv/visualisation/mapEntityPartitionsToShapePartitions.js';
 import renderShapes from './plv/visualisation/renderShapes.js';
+import EfficiencyLevel from './plv/model/EfficiencyLevel.js';
 
 import StationShape from './plv/visualisation/shapes/domain/Station.js';
 import SourceShape from './plv/visualisation/shapes/domain/Source.js';
@@ -49,6 +50,13 @@ window.onload = function(){
             'Drain':   entity => new DrainShape(entity.id),
             'Source':  entity => new SourceShape(entity.id),
             'Station': entity => new StationShape(entity.id, entity.label, entity.efficiencyLevel, entity.efficiencyRelativeAmountLabel),
+        },
+        colorCodeForLevel: {
+            [EfficiencyLevel.Low]:    '#F60A20',
+            [EfficiencyLevel.Medium]: '#FF7F00',
+            [EfficiencyLevel.High]:   '#8fb239',
+            [undefined]:              'gray',
+            [null]:                   'gray'
         }
     };
 

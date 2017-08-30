@@ -32,9 +32,9 @@ export default function getNormalizedPartitions(columnPartitionsWithShapes, prod
                 secondColumn.push(null);
                 continue;
             }
-            const currentVertex = productionLine.Get(currentShape.id);
+            const currentEntity = productionLine.Get(currentShape.id);
 
-            if(hasVertecesPointingToItFromSameColumn(columnPartitionsWithShapes, currentVertex.id, columnIndex)){
+            if(hasVertecesPointingToItFromSameColumn(columnPartitionsWithShapes, currentEntity.id, columnIndex)){
                 firstColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
                 secondColumn.push(currentShape);
             } else {
@@ -42,8 +42,8 @@ export default function getNormalizedPartitions(columnPartitionsWithShapes, prod
                 secondColumn.push(new ImaginaryShape(currentShape.width, currentShape.height));
             }
         }
-        const secondColumnShouldBeAdded = secondColumn.some(shape => shape && shape.id !== ImaginaryShape.Id);
 
+        const secondColumnShouldBeAdded = secondColumn.some(shape => shape && shape.id !== ImaginaryShape.Id);
         for(let rowIndex = 0; rowIndex < columnPartitionsWithShapes.RowCount; rowIndex++){
             normalizedLayout[rowIndex] = normalizedLayout[rowIndex] || [];
             normalizedLayout[rowIndex].push(firstColumn[rowIndex]);

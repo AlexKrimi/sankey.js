@@ -4,14 +4,6 @@ import Drain from '../visualisation/shapes/domain/Drain.js';
 import Buffer from '../visualisation/shapes/domain/Buffer.js';
 import EfficiencyLevel from './../model/EfficiencyLevel.js';
 
-const colorCodeForLevel = {
-    [EfficiencyLevel.Low]:    '#F60A20',
-    [EfficiencyLevel.Medium]: '#FF7F00',
-    [EfficiencyLevel.High]:   '#8fb239',
-    [undefined]:              'gray',
-    [null]:                   'gray'
-};
-
 const lineFunction =
     d3.line()
     .x(function(d) { return d.x; })
@@ -57,8 +49,8 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
                 .append('path')
                 .attr('d', lineFunction(lineData))
                 .attr('class', 'flow')
-                .attr('data-gradient-start', colorCodeForLevel[edgeData.from.efficiencyLevel])
-                .attr('data-gradient-end', colorCodeForLevel[edgeData.to.efficiencyLevel])
+                .attr('data-gradient-start', options.colorCodeForLevel[edgeData.from.efficiencyLevel])
+                .attr('data-gradient-end', options.colorCodeForLevel[edgeData.to.efficiencyLevel])
                 .attr('data-intensity', edgeData.intensity || 0)
                 .attr('data-width', edgeData.width || 0)
                 // Not really important since it's going to be replaced by renderGradient metohd.
