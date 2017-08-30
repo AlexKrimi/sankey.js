@@ -41,6 +41,7 @@ window.onload = function(){
         windowMarginTop: 50,
         elementMarginTop: 80,
         elementMarginRight: 85,
+        maxFlowWidth: 46
     };
 
     const productionLine = generateDummyProductionLine();
@@ -67,7 +68,7 @@ window.onload = function(){
 
     const layoutedShapes = LayoutManager(options, columnPartitionsWithShapes);
 
-    renderLinks(productionLine, layoutedShapes, canvas);
+    renderLinks(productionLine, layoutedShapes, canvas, options);
     renderGradients(canvas);
 
     for(let row of layoutedShapes){

@@ -18,14 +18,12 @@ const lineFunction =
     .y(function(d) { return d.y; })
     .curve(d3.curveBasis);
 
-const MAX_FLOW_WIDTH = 46;
-
 const Side = {
     left: 0,
     right: 1
 }
 
-export default function renderLinks(productionLine, layoutedShapes, canvas){
+export default function renderLinks(productionLine, layoutedShapes, canvas, options){
     const findShapeById = (function(){
         const allShapes =
             layoutedShapes
@@ -37,35 +35,37 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
         return (id) => allShapes.find(shape => shape.id === id);
     })();
 
-    const positionOfLeftFlows = getPositionOfFlowsBySide(Side.left);
-    const positionOfRightFlows = getPositionOfFlowsBySide(Side.right);
-    for(let edgeData of [...linkDescriptionGenerator(productionLine, positionOfLeftFlows, positionOfRightFlows)]){
-        const lengthOfStraightPart = edgeData.distanceBetweenBounds * 0.20;
+    {
+        const positionOfLeftFlows = getPositionOfFlowsBySide(Side.left);
+        const positionOfRightFlows = getPositionOfFlowsBySide(Side.right);
+        for(let edgeData of [...linkDescriptionGenerator(productionLine, positionOfLeftFlows, positionOfRightFlows)]){
+            const lengthOfStraightPart = edgeData.distanceBetweenBounds * 0.20;
 
-        const lineData = [
-            { x: edgeData.from.x,                        y: edgeData.from.y },
-            { x: edgeData.from.x + lengthOfStraightPart, y: edgeData.from.y },
-            { x: edgeData.to.x   - lengthOfStraightPart, y: edgeData.to.y },
-            { x: edgeData.to.x,                          y: edgeData.to.y }
-        ];
+            const lineData = [
+                { x: edgeData.from.x,                        y: edgeData.from.y },
+                { x: edgeData.from.x + lengthOfStraightPart, y: edgeData.from.y },
+                { x: edgeData.to.x   - lengthOfStraightPart, y: edgeData.to.y },
+                { x: edgeData.to.x,                          y: edgeData.to.y }
+            ];
 
-        const flowGroup =
-            canvas
-            .append('g')
-            .attr('class', 'flowGroup');
+            const flowGroup =
+                canvas
+                .append('g')
+                .attr('class', 'flowGroup');
 
-        flowGroup
-            .append('path')
-            .attr('d', lineFunction(lineData))
-            .attr('class', 'flow')
-            .attr('data-gradient-start', colorCodeForLevel[edgeData.from.efficiencyLevel])
-            .attr('data-gradient-end', colorCodeForLevel[edgeData.to.efficiencyLevel])
-            .attr('data-intensity', edgeData.intensity || 0)
-            .attr('data-width', edgeData.width || 0)
-            // Not really important since it's going to be replaced by renderGradient metohd.
-            .attr('stroke', 'gray')
-            .attr('stroke-width', 10)
-            .attr('fill', 'none');
+            flowGroup
+                .append('path')
+                .attr('d', lineFunction(lineData))
+                .attr('class', 'flow')
+                .attr('data-gradient-start', colorCodeForLevel[edgeData.from.efficiencyLevel])
+                .attr('data-gradient-end', colorCodeForLevel[edgeData.to.efficiencyLevel])
+                .attr('data-intensity', edgeData.intensity || 0)
+                .attr('data-width', edgeData.width || 0)
+                // Not really important since it's going to be replaced by renderGradient metohd.
+                .attr('stroke', 'gray')
+                .attr('stroke-width', 10)
+                .attr('fill', 'none');
+        }
     }
 
     function getUniqVertexIdsByLinkHandSide(side){
@@ -94,7 +94,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
     function* yPositionGenerator(groupOfLinksWithCommonSideOfVertex, shapeBounds, totalFlowWidth){
         let y =  shapeBounds.y1 + (shapeBounds.y2 - shapeBounds.y1 - totalFlowWidth) / 2;
         for(let edge of groupOfLinksWithCommonSideOfVertex){
-            const currentFlowWidth = edge.intensity * MAX_FLOW_WIDTH;
+            const currentFlowWidth = edge.intensity * options.maxFlowWidth;
             yield y + currentFlowWidth / 2;
             y = y + currentFlowWidth;
         }
@@ -125,7 +125,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
             yield {
                 id: edge.id,
                 intensity: edge.intensity,
-                width: edge.intensity * MAX_FLOW_WIDTH,
+                width: edge.intensity * options.maxFlowWidth,
                 distanceBetweenBounds: rightPosition.x - leftPosition.x,
 
                 from:{
@@ -152,7 +152,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
             .map(function(vertexId){
                 const groupOfLinksWithCommonSideOfVertex = getLinksGroupedByVertexSide(productionLine, side)[vertexId];
                 const fromShapeBounds = findShapeById(vertexId).GetBoundingBox();
-                const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * MAX_FLOW_WIDTH + aggregate, 0);
+                const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * options.maxFlowWidth + aggregate, 0);
                 const xGenerator = xPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, side);
                 const yGenerator = yPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, totalFlowWidth);
                 return [...positionForFlowsGenerator(groupOfLinksWithCommonSideOfVertex, xGenerator, yGenerator)];
