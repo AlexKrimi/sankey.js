@@ -6,7 +6,7 @@ import renderGradients from './plv/util/renderGradients.js';
 import transposeMatrix from './plv/util/transposeMatrix.js';
 import loadSvgImage from './plv/util/loadSvgImage.js';
 import LayoutManager from './plv/visualisation/LayoutManager.js';
-import LinkManager from './plv/visualisation/LinkManager.js';
+import renderLinks from './plv/visualisation/renderLinks.js';
 
 import StationShape from './plv/visualisation/shapes/domain/Station.js';
 import SourceShape from './plv/visualisation/shapes/domain/Source.js';
@@ -67,7 +67,7 @@ window.onload = function(){
 
     const layoutedShapes = LayoutManager(options, columnPartitionsWithShapes);
 
-    LinkManager(productionLine, layoutedShapes, canvas);
+    renderLinks(productionLine, layoutedShapes, canvas);
     renderGradients(canvas);
 
     for(let row of layoutedShapes){
