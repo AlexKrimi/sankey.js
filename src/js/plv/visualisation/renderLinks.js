@@ -20,6 +20,11 @@ const lineFunction =
 
 const MAX_FLOW_WIDTH = 46;
 
+const Side = {
+    left: 0,
+    right: 1
+}
+
 export default function renderLinks(productionLine, layoutedShapes, canvas){
     const findShapeById = (function(){
         const allShapes =
@@ -32,14 +37,41 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
         return (id) => allShapes.find(shape => shape.id === id);
     })();
 
-    function getUniqVertexIdsByLinkHandSide(side){
-        const possibleSides = ['left', 'right'];
-        if(!possibleSides.includes(side))
-            throw new Error(`Expected 'left' or 'right' for side instead of ${side}`);
+    const positionOfLeftFlows = getPositionOfFlowsBySide(Side.left);
+    const positionOfRightFlows = getPositionOfFlowsBySide(Side.right);
+    for(let edgeData of [...linkDescriptionGenerator(productionLine, positionOfLeftFlows, positionOfRightFlows)]){
+        const lengthOfStraightPart = edgeData.distanceBetweenBounds * 0.20;
 
+        const lineData = [
+            { x: edgeData.from.x,                        y: edgeData.from.y },
+            { x: edgeData.from.x + lengthOfStraightPart, y: edgeData.from.y },
+            { x: edgeData.to.x   - lengthOfStraightPart, y: edgeData.to.y },
+            { x: edgeData.to.x,                          y: edgeData.to.y }
+        ];
+
+        const flowGroup =
+            canvas
+            .append('g')
+            .attr('class', 'flowGroup');
+
+        flowGroup
+            .append('path')
+            .attr('d', lineFunction(lineData))
+            .attr('class', 'flow')
+            .attr('data-gradient-start', colorCodeForLevel[edgeData.from.efficiencyLevel])
+            .attr('data-gradient-end', colorCodeForLevel[edgeData.to.efficiencyLevel])
+            .attr('data-intensity', edgeData.intensity || 0)
+            .attr('data-width', edgeData.width || 0)
+            // Not really important since it's going to be replaced by renderGradient metohd.
+            .attr('stroke', 'gray')
+            .attr('stroke-width', 10)
+            .attr('fill', 'none');
+    }
+
+    function getUniqVertexIdsByLinkHandSide(side){
         const edgeSide = ({
-            left: 'from',
-            right: 'to'
+            [Side.left]: 'from',
+            [Side.right]: 'to'
         })[side];
 
         return _(productionLine.edges)
@@ -49,12 +81,8 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
     }
 
     function* xPositionGenerator(groupOfLinksWithCommonSideOfVertex, shapeBounds, side){
-        const possibleSides = ['left', 'right'];
-        if(!possibleSides.includes(side))
-            throw new Error(`Expected 'left' or 'right' for side instead of ${side}`);
-
         const x =
-            side === 'left'
+            side === Side.left
             ? shapeBounds.x2
             : shapeBounds.x1;
 
@@ -113,11 +141,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
     };
 
     function getLinksGroupedByVertexSide(productionLine, side){
-        const possibleSides = ['left', 'right'];
-        if(!possibleSides.includes(side))
-            throw new Error(`Expected 'left' or 'right' for side instead of ${side}`);
-
-        if(side === 'left')
+        if(side === Side.left)
             return _.groupBy(productionLine.edges, edge => edge.from.id);
         else
             return _.groupBy(productionLine.edges, edge => edge.to.id);
@@ -135,34 +159,5 @@ export default function renderLinks(productionLine, layoutedShapes, canvas){
             })
             .flatten()
             .value();
-    }
-
-    for(let edgeData of [...linkDescriptionGenerator(productionLine, getPositionOfFlowsBySide('left'), getPositionOfFlowsBySide('right'))]){
-        const lengthOfStraightPart = edgeData.distanceBetweenBounds * 0.20;
-
-        const lineData = [
-            { x: edgeData.from.x,                        y: edgeData.from.y },
-            { x: edgeData.from.x + lengthOfStraightPart, y: edgeData.from.y },
-            { x: edgeData.to.x   - lengthOfStraightPart, y: edgeData.to.y },
-            { x: edgeData.to.x,                          y: edgeData.to.y }
-        ];
-
-        const flowGroup =
-            canvas
-            .append('g')
-            .attr('class', 'flowGroup');
-
-        flowGroup
-            .append('path')
-            .attr('d', lineFunction(lineData))
-            .attr('class', 'flow')
-            .attr('data-gradient-start', colorCodeForLevel[edgeData.from.efficiencyLevel])
-            .attr('data-gradient-end', colorCodeForLevel[edgeData.to.efficiencyLevel])
-            .attr('data-intensity', edgeData.intensity || 0)
-            .attr('data-width', edgeData.width || 0)
-            // Not really important since it's going to be replaced by renderGradient metohd.
-            .attr('stroke', 'gray')
-            .attr('stroke-width', 10)
-            .attr('fill', 'none');
     }
 }
