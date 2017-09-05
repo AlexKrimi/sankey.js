@@ -6,6 +6,7 @@ JavaScript framework for creating Sankey diagrams with custom graphics.
 # Specifics
 ## Supported diagrams
 Diagrams that are supported can be characterized with following properties.
+
 | Supported | Property | Elaboration |
 | ------------- | ------------- | ------------- |
 | ✅ Yes | Planar graphs  | |
