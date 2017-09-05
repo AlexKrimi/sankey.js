@@ -1,14 +1,11 @@
-import ShapeBase from '../ShapeBase.js'
-import EfficiencyLevel from '../../../model/EfficiencyLevel.js';
-
 const bufferSvgIdCode = {};
-bufferSvgIdCode[EfficiencyLevel.Low] = '#buffer-low';
-bufferSvgIdCode[EfficiencyLevel.Medium] = '#buffer-medium';
-bufferSvgIdCode[EfficiencyLevel.High] = '#buffer-high';
+bufferSvgIdCode[plv.EfficiencyLevel.Low] = '#buffer-low';
+bufferSvgIdCode[plv.EfficiencyLevel.Medium] = '#buffer-medium';
+bufferSvgIdCode[plv.EfficiencyLevel.High] = '#buffer-high';
 bufferSvgIdCode[undefined] = '#buffer-not-available';
 bufferSvgIdCode[null] = '#buffer-not-available';
 
-export default class Buffer extends ShapeBase {
+export default class Buffer extends plv.ShapeBase {
     constructor(id, label, efficiencyLevel){
         super(id, 54, 55.49);
         this._label = label;

@@ -1,6 +1,4 @@
-import ShapeBase from '../ShapeBase.js'
-
-export default class Drain extends ShapeBase {
+export default class Drain extends plv.ShapeBase {
     constructor(id){
         super(id, 16, 50);
     }

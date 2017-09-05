@@ -1,15 +1,13 @@
-import ShapeBase from '../ShapeBase.js'
-import EfficiencyLevel from '../../../model/EfficiencyLevel.js';
 
 const stationSvgIdCode = {
-    [EfficiencyLevel.Low]:    '#station-low',
-    [EfficiencyLevel.Medium]: '#station-medium',
-    [EfficiencyLevel.High]:   '#station-high',
+    [plv.EfficiencyLevel.Low]:    '#station-low',
+    [plv.EfficiencyLevel.Medium]: '#station-medium',
+    [plv.EfficiencyLevel.High]:   '#station-high',
     [undefined]:              '#station-not-available',
     [null]:                   '#station-not-available',
 };
 
-export default class Station extends ShapeBase {
+export default class Station extends plv.ShapeBase {
     constructor(id, label, efficiencyLevel, efficiencyRelativeAmountLabel){
         super(id, 75, 68.05);
         this._label = label;

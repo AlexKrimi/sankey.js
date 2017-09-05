@@ -1,7 +1,7 @@
-export default function loadSvgImage(...imageFilenames){
+export default function loadSvgImage(path, ...imageFilenames){
     for(let filename of imageFilenames){
         d3
-        .xml(`./src/images/${filename}.svg`)
+        .xml(`${path}${filename}.svg`)
         .mimeType('image/svg+xml')
         .get(function(error, xml) {
             if (error) throw error;

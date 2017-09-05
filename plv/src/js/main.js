@@ -1,5 +1,4 @@
 import ModelManager from './plv/model/ModelManager.js';
-//import generateDummyProductionLine from './generateDummyProductionLine.js';
 import fromProductionModelToColumnPartitionsForVisualization from './plv/visualisation/fromProductionModelToColumnPartitionsForVisualization.js';
 import getNormalizedPartitions from './plv/visualisation/getNormalizedPartitions.js';
 import renderGradients from './plv/util/renderGradients.js';
@@ -10,63 +9,32 @@ import renderLinks from './plv/visualisation/renderLinks.js';
 import mapEntityPartitionsToShapePartitions from './plv/visualisation/mapEntityPartitionsToShapePartitions.js';
 import renderShapes from './plv/visualisation/renderShapes.js';
 import EfficiencyLevel from './plv/model/EfficiencyLevel.js';
+import EntityBase from './plv/model/EntityBase.js';
+import ShapeBase from './plv/visualisation/shapes/ShapeBase.js';
 
+(function(global) {
+    'use strict';
 
-export function plv(){
-    conosle.log(55);
-}
-// window.onload = function(){
-//     (function loadExternalImages(){
-//         const svgSymbolFilenames =
-//             ['station-low',
-//              'station-medium',
-//              'station-high',
-//              'station-not-available',
-//              'buffer-low',
-//              'buffer-medium',
-//              'buffer-high',
-//              'buffer-not-available'];
-//         loadSvgImage(...svgSymbolFilenames);
-//      })();
+    function render(productionLineModel, canvas, options){
+        productionLineModel.IsValid();
+        const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(productionLineModel);
+        const transposedColumnPartitions = transposeMatrix(columnPartitions);
+        let columnPartitionsWithShapes = mapEntityPartitionsToShapePartitions(transposedColumnPartitions, options);
+        columnPartitionsWithShapes = getNormalizedPartitions(columnPartitionsWithShapes, productionLineModel);
+        applyLayout(options, columnPartitionsWithShapes);
+        renderLinks(productionLineModel, columnPartitionsWithShapes, canvas, options);
+        renderGradients(canvas);
+        renderShapes(columnPartitionsWithShapes, canvas);
+    }
 
-//     const canvas =
-//         d3.select('body')
-//         .append('svg')
-//         .attr('id', 'canvas')
-//         .attr('width', 2000)
-//         .attr('height', 600);
+    let module = {};
 
-//     const options = {
-//         alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
-//         verticalDistributionToCanvas: ['top', 'center'][1],
-//         windowMarginLeft: 50,
-//         windowMarginTop: 50,
-//         elementMarginTop: 80,
-//         elementMarginRight: 85,
-//         maxFlowWidth: 46,
-//         entityToShapeMap: {
-//             'Buffer':  entity => new BufferShape(entity.id, entity.label, entity.efficiencyLevel),
-//             'Drain':   entity => new DrainShape(entity.id),
-//             'Source':  entity => new SourceShape(entity.id),
-//             'Station': entity => new StationShape(entity.id, entity.label, entity.efficiencyLevel, entity.efficiencyRelativeAmountLabel),
-//         },
-//         colorCodeForLevel: {
-//             [EfficiencyLevel.Low]:    '#F60A20',
-//             [EfficiencyLevel.Medium]: '#FF7F00',
-//             [EfficiencyLevel.High]:   '#8fb239',
-//             [undefined]:              'gray',
-//             [null]:                   'gray'
-//         }
-//     };
+    module.ModelManager = ModelManager;
+    module.EntityBase = EntityBase;
+    module.ShapeBase = ShapeBase;
+    module.EfficiencyLevel = EfficiencyLevel;
+    module.loadSvgImage = loadSvgImage;
+    module.render = render;
 
-//     const productionLine = generateDummyProductionLine();
-//     productionLine.IsValid();
-//     const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(productionLine);
-//     const transposedColumnPartitions = transposeMatrix(columnPartitions);
-//     let columnPartitionsWithShapes = mapEntityPartitionsToShapePartitions(transposedColumnPartitions, options);
-//     columnPartitionsWithShapes = getNormalizedPartitions(columnPartitionsWithShapes, productionLine);
-//     applyLayout(options, columnPartitionsWithShapes);
-//     renderLinks(productionLine, columnPartitionsWithShapes, canvas, options);
-//     renderGradients(canvas);
-//     renderShapes(columnPartitionsWithShapes, canvas);
-// }
+    global.plv = global.plv || module;
+})(typeof window === 'undefined' ? this : window);

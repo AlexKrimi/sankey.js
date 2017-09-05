@@ -1,6 +1,4 @@
-import EntityBase from './../EntityBase.js'
-
-export default class Source extends EntityBase {
+export default class Source extends plv.EntityBase {
     constructor(){
         super();
     }

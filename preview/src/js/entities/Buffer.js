@@ -1,6 +1,4 @@
-import EntityBase from './../EntityBase.js'
-
-export default class Buffer extends EntityBase {
+export default class Buffer extends plv.EntityBase {
     constructor(label, efficiencyLevel){
         super();
         this._label = label;

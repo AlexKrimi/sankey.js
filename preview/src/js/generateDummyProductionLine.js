@@ -1,31 +1,33 @@
-import EfficiencyLevel from './plv/model/EfficiencyLevel.js';
-import ModelManager from './plv/model/ModelManager.js';
+import SourceEntity from './entities/Source.js';
+import DrainEntity from './entities/Drain.js';
+import StationEntity from './entities/Station.js';
+import BufferEntity from './entities/Buffer.js';
 
 export default function (){
-    const modelManager = new ModelManager();
+    const modelManager = new plv.ModelManager();
 
     const source = new SourceEntity();
     const drain = new DrainEntity();
 
     const
-        s1  = new StationEntity('1STAR-0A', EfficiencyLevel.High, '90%'),
-        s2  = new StationEntity('2STAR-06', EfficiencyLevel.High, '90%'),
-        s3  = new StationEntity('3FA01', EfficiencyLevel.High, '90%'),
-        s4  = new StationEntity('4FB02', EfficiencyLevel.High, '90%'),
-        s5  = new StationEntity('5FC03', EfficiencyLevel.Low, '0%'),
-        s6  = new StationEntity('6FC04', EfficiencyLevel.High, '90%'),
-        s7  = new StationEntity('7FD01', EfficiencyLevel.High, '90%'),
-        s8  = new StationEntity('8KAR9605', EfficiencyLevel.Medium),
-        s9  = new StationEntity('9MAN8695', EfficiencyLevel.High),
-        s10 = new StationEntity('10FRS', EfficiencyLevel.Low, '20%'),
-        s11 = new StationEntity('11QP-98', EfficiencyLevel.Medium, '70%'),
-        s12 = new StationEntity('12QA', EfficiencyLevel.High),
-        s13 = new StationEntity('13FIN', EfficiencyLevel.High, '90%');
+        s1  = new StationEntity('1STAR-0A', plv.EfficiencyLevel.High, '90%'),
+        s2  = new StationEntity('2STAR-06', plv.EfficiencyLevel.High, '90%'),
+        s3  = new StationEntity('3FA01', plv.EfficiencyLevel.High, '90%'),
+        s4  = new StationEntity('4FB02', plv.EfficiencyLevel.High, '90%'),
+        s5  = new StationEntity('5FC03', plv.EfficiencyLevel.Low, '0%'),
+        s6  = new StationEntity('6FC04', plv.EfficiencyLevel.High, '90%'),
+        s7  = new StationEntity('7FD01', plv.EfficiencyLevel.High, '90%'),
+        s8  = new StationEntity('8KAR9605', plv.EfficiencyLevel.Medium),
+        s9  = new StationEntity('9MAN8695', plv.EfficiencyLevel.High),
+        s10 = new StationEntity('10FRS', plv.EfficiencyLevel.Low, '20%'),
+        s11 = new StationEntity('11QP-98', plv.EfficiencyLevel.Medium, '70%'),
+        s12 = new StationEntity('12QA', plv.EfficiencyLevel.High),
+        s13 = new StationEntity('13FIN', plv.EfficiencyLevel.High, '90%');
 
     const
-        buffer1 = new BufferEntity('3/12', EfficiencyLevel.High),
-        buffer2 = new BufferEntity('80%', EfficiencyLevel.Medium),
-        buffer3 = new BufferEntity('50%', EfficiencyLevel.High);
+        buffer1 = new BufferEntity('3/12', plv.EfficiencyLevel.High),
+        buffer2 = new BufferEntity('80%', plv.EfficiencyLevel.Medium),
+        buffer3 = new BufferEntity('50%', plv.EfficiencyLevel.High);
 
     [source, drain, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, buffer1, buffer2, buffer3]
     .forEach(vertex => modelManager.AddVertex(vertex));
