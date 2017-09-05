@@ -37,6 +37,6 @@ Diagrams that are supported can be characterized with following properties.
 ## How to include plv.js in my project?
 ## How to setup dev environment?
 
-# API Details and Implementation details
-
+# Usage and Implementation details
+For usage and implementation details have a look at projects [📖 Wiki page](https://github.com/MiroslavJelaska/plv.js/wiki/1.-Home).
 
