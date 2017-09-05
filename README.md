@@ -32,11 +32,6 @@ Diagrams that are supported can be characterized with following properties.
 2. Codebase is written in JavaScript ES6
 3. Solution uses [webpack](https://webpack.js.org/)
 
-# Setup
-## How to run example project?
-## How to include plv.js in my project?
-## How to setup dev environment?
-
 # Usage and Implementation details
 For usage and implementation details have a look at projects [📖 Wiki page](https://github.com/MiroslavJelaska/plv.js/wiki/1.-Home).
 
