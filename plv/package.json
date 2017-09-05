@@ -2,10 +2,9 @@
   "name": "plv.js",
   "version": "1.0.0",
   "description": "Production Line Visualisation framework for JavaScript.",
-  "main": " ",
+  "main": "",
   "scripts": {
     "babel": "babel --presets es2015 src/js/main.js -o build/main.bundle.js",
-    "test": "./node_modules/mocha/bin/mocha",
     "webpack": "webpack"
   },
   "repository": "git+https://github.com/MiroslavJelaska/plv.js.git",
@@ -20,7 +19,7 @@
     "graph"
   ],
   "author": "Miroslav Jelaska <jelaska.miro@gmail.com>",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/MiroslavJelaska/plv.js/issues"
   },

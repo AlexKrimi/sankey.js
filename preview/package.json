@@ -1,15 +1,15 @@
 {
   "name": "preview",
   "version": "1.0.0",
-  "description": "",
+  "description": "Preview for plv.js",
   "main": "webpack.config.js",
   "scripts": {
     "babel": "babel --presets es2015 src/js/main.js -o build/main.bundle.js",
-    "test": "./node_modules/mocha/bin/mocha",
     "webpack": "webpack"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": "git+https://github.com/MiroslavJelaska/plv.js.git",
+  "author": "Miroslav Jelaska",
+  "license": "GPL-3.0",
   "dependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",

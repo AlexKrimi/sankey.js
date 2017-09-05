@@ -1,5 +1,6 @@
 # plv.js
 Lightweight JavaScript framework for creating production line visualisations.
+<img src="readme-resources/screenshot.png" alt="Screenshot" width="100%"/>
 
 # Helpful resources
  * [dashingd3js.com > D3 Tutorial Table of Contents](https://www.dashingd3js.com/table-of-contents)
