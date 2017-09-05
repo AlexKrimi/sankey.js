@@ -20,7 +20,15 @@ Diagrams that are supported can be characterized with following properties.
 [1] Skiena, Steven S. “15.10 Drawing Graphs Nicely.” The Algorithm Design Manual, Springer, 2012, pp. 513–516.
 
 ## Features
+
 ## Very general technical information
+
+1. Has following dependancies
+   * [d3.js](https://d3js.org/) 
+   * [lodash](https://lodash.com/) 
+   * [js-enumeration](https://github.com/MiroslavJelaska/js-enumeration)
+2. Codebase is written in JavaScript ES6
+3. Solution uses [webpack](https://webpack.js.org/)
 
 # Setup
 ## How to run example project?
