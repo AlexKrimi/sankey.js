@@ -3,7 +3,6 @@ _Readme and wikis are work in progress._
 JavaScript framework for creating Sankey diagrams with custom graphics.
 <img src="readme-resources/screenshot.png" alt="Screenshot" width="100%"/>
 
-# Specifics
 ## Supported diagrams
 Diagrams that are supported can be characterized with following properties.
 
