@@ -52,6 +52,6 @@ function init(){
         plv.loadSvgImage(imagesPath, ...svgSymbolFilenames);
     })();
 
-    plv.render(model, canvas, options);
+    plv.renderModel(model, canvas, options);
 }
 window.onload = init;
