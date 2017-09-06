@@ -8,7 +8,6 @@ Diagrams that are supported can be characterized with following properties.
 | Supported | Property | Elaboration |
 | ------------- | ------------- | ------------- |
 | ✅ Yes | Planar graphs  | "Planar drawings (or embeddings) make clear the structure of a given graph by eliminating crossing edges, which can be confused as additional vertices. Graphs defined by road networks, printed circuit board layouts, and the like are inherently planar because they are completely defined by surface structures." <sup>[1]</sup> |
-| ✅ Yes | Non-planar graphs  | It should work. Haven't tested that one yet. 🤔 |
 | ✅ Yes | Directed graph  | Graph should be directed. |
 | ✅ Yes | Acyclic graph  | Graph should be acyclic (e.g. no feedback loops, no material refinement loops). |
 | ❌ No | More than one entry point (i.e. source)?  | There should be only one entry point. Layouting algorithm will use it starting point. |
