@@ -16,7 +16,7 @@ export default function renderModel(productionLineModel, canvas, options){
     applyLayout(options, columnPartitionsWithShapes);
     renderLinks(productionLineModel, columnPartitionsWithShapes, canvas, options);
 
-    if(!options.links.color)
+    if(!options.link.color)
         renderGradients(canvas);
 
     renderShapes(columnPartitionsWithShapes, canvas);

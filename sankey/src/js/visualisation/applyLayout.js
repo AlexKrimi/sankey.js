@@ -33,21 +33,21 @@ function getMaxHeightForRow(layoutedShapes, rowIndex){
 
 
 function applyRelativeAlignmentToOtherElementsInSameColumn(options, layoutedShapes){
-    if(options.alignToOtherElementsInTheSameColumn === 'center')
+    if(options.layout.alignToOtherElementsInTheSameColumn === 'center')
         alignToOtherElementsInTheSameColumn_center(options, layoutedShapes);
-    else if(options.alignToOtherElementsInTheSameColumn === 'left')
+    else if(options.layout.alignToOtherElementsInTheSameColumn === 'left')
         alignToOtherElementsInTheSameColumn_left(options, layoutedShapes);
     else
-        throw new Error(`Incorrect =lue for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
+        throw new Error(`Incorrect =lue for options.alignToOtherElementsInTheSameColumn of ${options.layout.alignToOtherElementsInTheSameColumn}`);
 }
 
 function alignToOtherElementsInTheSameColumn_center(options, layoutedShapes){
     const alignVertically = true;
     for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
-        let xPosition = options.windowMarginLeft;
+        let xPosition = options.window.margin.left;
         for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
             if(layoutedShapes[rowIndex][columnIndex] === null){
-                xPosition = xPosition + getMaxWidthForColumn(layoutedShapes, columnIndex) + options.elementMarginRight;
+                xPosition = xPosition + getMaxWidthForColumn(layoutedShapes, columnIndex) + options.shape.margin.right;
                 continue;
             }
             const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
@@ -56,7 +56,7 @@ function alignToOtherElementsInTheSameColumn_center(options, layoutedShapes){
             xPosition = xPosition + (getMaxWidthForColumn(layoutedShapes, columnIndex) - elementWidth)/2;
             layoutedShapes[rowIndex][columnIndex].Translate(xPosition, 0);
             xPosition = xPosition + (getMaxWidthForColumn(layoutedShapes, columnIndex) - elementWidth)/2 + elementWidth;
-            xPosition = xPosition + options.elementMarginRight;
+            xPosition = xPosition + options.shape.margin.right;
         }
     }
 }
@@ -64,33 +64,33 @@ function alignToOtherElementsInTheSameColumn_center(options, layoutedShapes){
 function alignToOtherElementsInTheSameColumn_left(options, layoutedShapes){
     const alignVertically = true;
     for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
-        let xPosition = options.windowMarginLeft;
+        let xPosition = options.window.margin.left;
         for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
             if(layoutedShapes[rowIndex][columnIndex] === null){
-                xPosition = xPosition + getMaxWidthForColumn(layoutedShapes, columnIndex) + options.elementMarginRight;
+                xPosition = xPosition + getMaxWidthForColumn(layoutedShapes, columnIndex) + options.shape.margin.right;
                 continue;
             }
             const elementWidth = layoutedShapes[rowIndex][columnIndex].width;
 
             layoutedShapes[rowIndex] = layoutedShapes[rowIndex] || [];
             layoutedShapes[rowIndex][columnIndex].Translate(xPosition, 0);
-            xPosition = xPosition + getMaxWidthForColumn(layoutedShapes,columnIndex) + options.elementMarginRight;
+            xPosition = xPosition + getMaxWidthForColumn(layoutedShapes,columnIndex) + options.shape.margin.right;
         }
     }
 }
 
 
 function applyVerticalDistribution(options, layoutedShapes){
-    if(options.verticalDistributionToCanvas === 'top')
+    if(options.layout.verticalDistributionToCanvas === 'top')
         verticalDistributionToCanvas_top(options, layoutedShapes);
-    else if(options.verticalDistributionToCanvas === 'center')
+    else if(options.layout.verticalDistributionToCanvas === 'center')
         verticalDistributionToCanvas_center(options, layoutedShapes);
     else
-        throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.alignToOtherElementsInTheSameColumn}`);
+        throw new Error(`Incorrect value for options.alignToOtherElementsInTheSameColumn of ${options.layout.alignToOtherElementsInTheSameColumn}`);
 }
 
 function verticalDistributionToCanvas_top(options, layoutedShapes){
-    let yPosition = options.windowMarginTop;
+    let yPosition = options.window.margin.top;
     for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
         for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
         if(!layoutedShapes[rowIndex][columnIndex]){
@@ -98,7 +98,7 @@ function verticalDistributionToCanvas_top(options, layoutedShapes){
             }
             layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
         }
-        yPosition = yPosition + getMaxHeightForRow(layoutedShapes, rowIndex) + options.elementMarginTop;
+        yPosition = yPosition + getMaxHeightForRow(layoutedShapes, rowIndex) + options.shape.margin.top;
     }
 }
 
@@ -106,14 +106,14 @@ function verticalDistributionToCanvas_top(options, layoutedShapes){
 function verticalDistributionToCanvas_center(options, layoutedShapes){
     function applyEvenVerticalDistribution(){
         for(let columnIndex = 0; columnIndex < layoutedShapes.ColumnCount; columnIndex++){
-            let yPosition =  options.windowMarginTop;
+            let yPosition =  options.window.margin.top;
             for(let rowIndex = 0; rowIndex < layoutedShapes.RowCount; rowIndex++){
                 if(layoutedShapes[rowIndex][columnIndex] === null){
                     continue;
                 }
 
                 layoutedShapes[rowIndex][columnIndex].Translate(0, yPosition);
-                yPosition = yPosition + layoutedShapes[rowIndex][columnIndex].height + options.elementMarginTop;
+                yPosition = yPosition + layoutedShapes[rowIndex][columnIndex].height + options.shape.margin.top;
             }
         }
     };

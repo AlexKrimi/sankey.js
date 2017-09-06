@@ -49,8 +49,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
                 .attr('data-gradient-end', options.colorCodeForLevel[edgeData.to.efficiencyLevel])
                 .attr('data-intensity', edgeData.intensity || 0)
                 .attr('data-width', edgeData.width || 0)
-                // Not really important since it's going to be replaced by renderGradient metohd.
-                .attr('stroke', options.links.color || 'black')
+                .attr('stroke', options.link.color || 'black')
                 .attr('stroke-width', edgeData.width)
                 .attr('fill', 'none');
         }
@@ -82,7 +81,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
     function* yPositionGenerator(groupOfLinksWithCommonSideOfVertex, shapeBounds, totalFlowWidth){
         let y =  shapeBounds.y1 + (shapeBounds.y2 - shapeBounds.y1 - totalFlowWidth) / 2;
         for(let edge of groupOfLinksWithCommonSideOfVertex){
-            const currentFlowWidth = edge.intensity * options.links.maxWidth;
+            const currentFlowWidth = edge.intensity * options.link.maxWidth;
             yield y + currentFlowWidth / 2;
             y = y + currentFlowWidth;
         }
@@ -113,7 +112,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             yield {
                 id: edge.id,
                 intensity: edge.intensity,
-                width: edge.intensity * options.links.maxWidth,
+                width: edge.intensity * options.link.maxWidth,
                 distanceBetweenBounds: rightPosition.x - leftPosition.x,
 
                 from:{
@@ -142,7 +141,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             .map(function(vertexId){
                 const groupOfLinksWithCommonSideOfVertex = getLinksGroupedByVertexSide(productionLine, side)[vertexId];
                 const fromShapeBounds = findShapeById(vertexId).GetBoundingBox();
-                const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * options.links.maxWidth + aggregate, 0);
+                const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * options.link.maxWidth + aggregate, 0);
                 const xGenerator = xPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, side);
                 const yGenerator = yPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, totalFlowWidth);
                 return [...positionForFlowsGenerator(groupOfLinksWithCommonSideOfVertex, xGenerator, yGenerator)];

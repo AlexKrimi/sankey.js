@@ -5,13 +5,23 @@ import StationShape from './shapes/Station.js';
 import generateDummyProductionLine from './generateDummyProductionLine.js';
 
 const options = {
-    alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
-    verticalDistributionToCanvas: ['top', 'center'][1],
-    windowMarginLeft: 50,
-    windowMarginTop: 50,
-    elementMarginTop: 80,
-    elementMarginRight: 85,
-    links: {
+    layout: {
+        alignToOtherElementsInTheSameColumn: ['left', 'center'][1],
+        verticalDistributionToCanvas: ['top', 'center'][1],
+    },
+    window: {
+        margin: {
+            top: 50,
+            left: 50,
+        }
+    },
+    shape: {
+        margin: {
+            top: 80,
+            right: 85,
+        }
+    },
+    link: {
         //color: 'blue',
         maxWidth: 46,
     },
@@ -25,8 +35,8 @@ const options = {
         [sankey.EfficiencyLevel.Low]:    '#F60A20',
         [sankey.EfficiencyLevel.Medium]: '#FF7F00',
         [sankey.EfficiencyLevel.High]:   '#8fb239',
-        [undefined]:                  'gray',
-        [null]:                       'gray'
+        [undefined]:                     'gray',
+        [null]:                          'gray'
     }
 };
 
