@@ -1,11 +1,11 @@
 const bufferSvgIdCode = {};
-bufferSvgIdCode[plv.EfficiencyLevel.Low] = '#buffer-low';
-bufferSvgIdCode[plv.EfficiencyLevel.Medium] = '#buffer-medium';
-bufferSvgIdCode[plv.EfficiencyLevel.High] = '#buffer-high';
+bufferSvgIdCode[sankey.EfficiencyLevel.Low] = '#buffer-low';
+bufferSvgIdCode[sankey.EfficiencyLevel.Medium] = '#buffer-medium';
+bufferSvgIdCode[sankey.EfficiencyLevel.High] = '#buffer-high';
 bufferSvgIdCode[undefined] = '#buffer-not-available';
 bufferSvgIdCode[null] = '#buffer-not-available';
 
-export default class Buffer extends plv.ShapeBase {
+export default class Buffer extends sankey.ShapeBase {
     constructor(id, label, efficiencyLevel){
         super(id, 54, 55.49);
         this._label = label;

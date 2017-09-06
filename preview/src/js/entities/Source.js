@@ -1,4 +1,4 @@
-export default class Source extends plv.EntityBase {
+export default class Source extends sankey.EntityBase {
     constructor(){
         super();
     }

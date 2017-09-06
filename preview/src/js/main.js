@@ -19,9 +19,9 @@ const options = {
         'Station': entity => new StationShape(entity.id, entity.label, entity.efficiencyLevel, entity.efficiencyRelativeAmountLabel),
     },
     colorCodeForLevel: {
-        [plv.EfficiencyLevel.Low]:    '#F60A20',
-        [plv.EfficiencyLevel.Medium]: '#FF7F00',
-        [plv.EfficiencyLevel.High]:   '#8fb239',
+        [sankey.EfficiencyLevel.Low]:    '#F60A20',
+        [sankey.EfficiencyLevel.Medium]: '#FF7F00',
+        [sankey.EfficiencyLevel.High]:   '#8fb239',
         [undefined]:                  'gray',
         [null]:                       'gray'
     }
@@ -49,9 +49,9 @@ function init(){
 
     (function loadExternalImages(){
         const imagesPath = './src/images/';
-        plv.loadSvgImage(imagesPath, ...svgSymbolFilenames);
+        sankey.loadSvgImage(imagesPath, ...svgSymbolFilenames);
     })();
 
-    plv.renderModel(model, canvas, options);
+    sankey.renderModel(model, canvas, options);
 }
 window.onload = init;

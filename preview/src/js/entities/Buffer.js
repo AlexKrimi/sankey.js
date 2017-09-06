@@ -1,4 +1,4 @@
-export default class Buffer extends plv.EntityBase {
+export default class Buffer extends sankey.EntityBase {
     constructor(label, efficiencyLevel){
         super();
         this._label = label;

@@ -1,4 +1,4 @@
-export default class Source extends plv.ShapeBase {
+export default class Source extends sankey.ShapeBase {
     constructor(id){
         super(id, 16, 50);
     }

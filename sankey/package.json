@@ -1,5 +1,5 @@
 {
-  "name": "plv.js",
+  "name": "sankey.js",
   "version": "1.0.0",
   "description": "Production Line Visualisation framework for JavaScript.",
   "main": "",
@@ -7,7 +7,7 @@
     "babel": "babel --presets es2015 src/js/main.js -o build/main.bundle.js",
     "webpack": "webpack"
   },
-  "repository": "git+https://github.com/MiroslavJelaska/plv.js.git",
+  "repository": "git+https://github.com/MiroslavJelaska/sankey.js.git",
   "keywords": [
     "production",
     "line",
@@ -21,9 +21,9 @@
   "author": "Miroslav Jelaska <jelaska.miro@gmail.com>",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/MiroslavJelaska/plv.js/issues"
+    "url": "https://github.com/MiroslavJelaska/sankey.js/issues"
   },
-  "homepage": "https://github.com/MiroslavJelaska/plv.js#readme",
+  "homepage": "https://github.com/MiroslavJelaska/sankey.js#readme",
   "dependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",

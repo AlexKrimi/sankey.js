@@ -1,13 +1,13 @@
 {
   "name": "preview",
   "version": "1.0.0",
-  "description": "Preview for plv.js",
+  "description": "Preview for sankey.js",
   "main": "webpack.config.js",
   "scripts": {
-    "babel": "babel --presets es2015 src/js/main.js -o build/main.bundle.js",
+    "babel": "babel --presets es2015 src/js/main.js -o build/preview.bundle.js",
     "webpack": "webpack"
   },
-  "repository": "git+https://github.com/MiroslavJelaska/plv.js.git",
+  "repository": "git+https://github.com/MiroslavJelaska/sankey.js.git",
   "author": "Miroslav Jelaska",
   "license": "GPL-3.0",
   "dependencies": {

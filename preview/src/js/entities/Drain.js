@@ -1,4 +1,4 @@
-export default class Drain extends plv.EntityBase {
+export default class Drain extends sankey.EntityBase {
     constructor(){
         super();
     }

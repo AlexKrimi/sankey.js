@@ -1,13 +1,13 @@
 
 const stationSvgIdCode = {
-    [plv.EfficiencyLevel.Low]:    '#station-low',
-    [plv.EfficiencyLevel.Medium]: '#station-medium',
-    [plv.EfficiencyLevel.High]:   '#station-high',
+    [sankey.EfficiencyLevel.Low]:    '#station-low',
+    [sankey.EfficiencyLevel.Medium]: '#station-medium',
+    [sankey.EfficiencyLevel.High]:   '#station-high',
     [undefined]:              '#station-not-available',
     [null]:                   '#station-not-available',
 };
 
-export default class Station extends plv.ShapeBase {
+export default class Station extends sankey.ShapeBase {
     constructor(id, label, efficiencyLevel, efficiencyRelativeAmountLabel){
         super(id, 75, 68.05);
         this._label = label;

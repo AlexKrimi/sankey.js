@@ -1,4 +1,4 @@
-export default class Station extends plv.EntityBase {
+export default class Station extends sankey.EntityBase {
     constructor(label, efficiencyLevel, efficiencyRelativeAmountLabel){
         super();
         this._label = label;
