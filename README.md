@@ -1,5 +1,4 @@
-_Readme and wikis are work in progress._
-# plv.js
+# sankey.js
 JavaScript framework for creating Sankey diagrams with custom graphics.
 <img src="readme-resources/screenshot.png" alt="Screenshot" width="100%"/>
 
@@ -16,9 +15,9 @@ Diagrams that are supported can be characterized with following properties.
 | ❌ No | More than one exit points (i.e. drains)?  | There should be only one drain point. Framework does not currently support this but it can be easily upgraded. |
 | ❌ No | Orthogonal polyline drawings  | "Orthogonal means that all lines must be drawn either horizontal or vertical, with no intermediate slopes. Polyline means that each graph edge is represented by a chain of straight-line segments, connected by vertices or bends."<sup>[2]</sup>.  Nodes can be connected only using relatively straight line that bends as it gets closer to the nodes (implemented using B-spline).  |
 
-[1] Skiena, Steven S. “15.12 Planarity Detection and Embedding.” The Algorithm Design Manual, Springer, 2012, pp. 520–522.
+[1] _Skiena, Steven S. “15.12 Planarity Detection and Embedding.” [The Algorithm Design Manual](https://www.goodreads.com/book/show/425208), Springer, 2012, pp. 520–522._
 
-[2] Skiena, Steven S. “15.10 Drawing Graphs Nicely.” The Algorithm Design Manual, Springer, 2012, pp. 513–516.
+[2] _Skiena, Steven S. “15.10 Drawing Graphs Nicely.” [The Algorithm Design Manual](https://www.goodreads.com/book/show/425208), Springer, 2012, pp. 513–516._
 
 ## Features
 
