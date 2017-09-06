@@ -24,6 +24,7 @@ const options = {
     link: {
         //color: 'blue',
         maxWidth: 46,
+        opacity: 0.65,
     },
     entityToShapeMap: {
         'Buffer':  entity => new BufferShape(entity.id, entity.label, entity.efficiencyLevel),

@@ -50,6 +50,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
                 .attr('data-intensity', edgeData.intensity || 0)
                 .attr('data-width', edgeData.width || 0)
                 .attr('stroke', options.link.color || 'black')
+                .style('stroke-opacity', options.link.opacity)
                 .attr('stroke-width', edgeData.width)
                 .attr('fill', 'none');
         }

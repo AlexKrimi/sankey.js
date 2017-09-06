@@ -4,7 +4,7 @@ import mapEntityPartitionsToShapePartitions from './mapEntityPartitionsToShapePa
 import getNormalizedPartitions from './getNormalizedPartitions.js';
 import applyLayout from '../visualisation/applyLayout.js';
 import renderLinks from './renderLinks.js';
-import renderGradients from '../util/renderGradients.js';
+import renderGradients from './renderGradients.js';
 import renderShapes from '../visualisation/renderShapes.js';
 
 export default function renderModel(productionLineModel, canvas, options){
@@ -17,7 +17,7 @@ export default function renderModel(productionLineModel, canvas, options){
     renderLinks(productionLineModel, columnPartitionsWithShapes, canvas, options);
 
     if(!options.link.color)
-        renderGradients(canvas);
+        renderGradients(canvas, options);
 
     renderShapes(columnPartitionsWithShapes, canvas);
 }
