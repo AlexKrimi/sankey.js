@@ -11,7 +11,10 @@ const options = {
     windowMarginTop: 50,
     elementMarginTop: 80,
     elementMarginRight: 85,
-    maxFlowWidth: 46,
+    links: {
+        //color: 'blue',
+        maxWidth: 46,
+    },
     entityToShapeMap: {
         'Buffer':  entity => new BufferShape(entity.id, entity.label, entity.efficiencyLevel),
         'Drain':   entity => new DrainShape(entity.id),

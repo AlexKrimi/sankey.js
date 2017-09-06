@@ -15,6 +15,9 @@ export default function renderModel(productionLineModel, canvas, options){
     columnPartitionsWithShapes = getNormalizedPartitions(columnPartitionsWithShapes, productionLineModel);
     applyLayout(options, columnPartitionsWithShapes);
     renderLinks(productionLineModel, columnPartitionsWithShapes, canvas, options);
-    renderGradients(canvas);
+
+    if(!options.links.color)
+        renderGradients(canvas);
+
     renderShapes(columnPartitionsWithShapes, canvas);
 }

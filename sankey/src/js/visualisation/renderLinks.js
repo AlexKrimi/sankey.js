@@ -50,8 +50,8 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
                 .attr('data-intensity', edgeData.intensity || 0)
                 .attr('data-width', edgeData.width || 0)
                 // Not really important since it's going to be replaced by renderGradient metohd.
-                .attr('stroke', 'gray')
-                .attr('stroke-width', 10)
+                .attr('stroke', options.links.color || 'black')
+                .attr('stroke-width', edgeData.width)
                 .attr('fill', 'none');
         }
     }
@@ -82,7 +82,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
     function* yPositionGenerator(groupOfLinksWithCommonSideOfVertex, shapeBounds, totalFlowWidth){
         let y =  shapeBounds.y1 + (shapeBounds.y2 - shapeBounds.y1 - totalFlowWidth) / 2;
         for(let edge of groupOfLinksWithCommonSideOfVertex){
-            const currentFlowWidth = edge.intensity * options.maxFlowWidth;
+            const currentFlowWidth = edge.intensity * options.links.maxWidth;
             yield y + currentFlowWidth / 2;
             y = y + currentFlowWidth;
         }
@@ -113,7 +113,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             yield {
                 id: edge.id,
                 intensity: edge.intensity,
-                width: edge.intensity * options.maxFlowWidth,
+                width: edge.intensity * options.links.maxWidth,
                 distanceBetweenBounds: rightPosition.x - leftPosition.x,
 
                 from:{
@@ -129,10 +129,12 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
     };
 
     function getLinksGroupedByVertexSide(productionLine, side){
-        if(side === Side.left)
-            return _.groupBy(productionLine.edges, edge => edge.from.id);
-        else
-            return _.groupBy(productionLine.edges, edge => edge.to.id);
+        const predicate =
+            (side === Side.left)
+            ? edge => edge.from.id
+            : edge => edge.to.id;
+
+        return _.groupBy(productionLine.edges, predicate);
     }
 
     function getPositionOfFlowsBySide(side){
@@ -140,7 +142,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             .map(function(vertexId){
                 const groupOfLinksWithCommonSideOfVertex = getLinksGroupedByVertexSide(productionLine, side)[vertexId];
                 const fromShapeBounds = findShapeById(vertexId).GetBoundingBox();
-                const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * options.maxFlowWidth + aggregate, 0);
+                const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * options.links.maxWidth + aggregate, 0);
                 const xGenerator = xPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, side);
                 const yGenerator = yPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, totalFlowWidth);
                 return [...positionForFlowsGenerator(groupOfLinksWithCommonSideOfVertex, xGenerator, yGenerator)];
