@@ -9,7 +9,7 @@ export default class ModelManager {
         this.source = null;
     }
 
-    AddVertex(entity){
+    AddVertex(entity, isSource){
         const immediateParentPrototypeName = Object.getPrototypeOf(entity.constructor).name;
         if(!immediateParentPrototypeName)
             throw new Error(`Immediate parent prototype of entity should be of type "EntityBase". Instead it has no parent.`);
@@ -19,21 +19,9 @@ export default class ModelManager {
             console.warn(`Vertex already added to the model. Vertex:`, entity);
             return this;
         }
-        if(entity.constructor.name === 'Source') {
-            const numberOfSources = this.verteces.filter(vertex => vertex.constructor.name === 'Source').length;
-            if(numberOfSources === 1) {
-                console.error(`Model should have exactly one source vertex. Cannot add additional vertex of type Source.`);
-            }
-        }
-        if(entity.constructor.name === 'Drain'){
-            const numberOfDrains = this.verteces.filter(vertex => vertex.constructor.name === 'Drain').length;
-            if(numberOfDrains === 1) {
-                console.error(`Model should have exactly one drain vertex. Cannot add additional vertex of type Drain.`);
-            }
-        }
 
         this.verteces.push(entity);
-        if(entity.constructor.name === 'Source') {
+        if(isSource) {
             this.source = entity;
         }
         return this;
@@ -102,11 +90,6 @@ export default class ModelManager {
         const numberOfSources = this.verteces.filter(vertex => vertex.constructor.name === 'Source').length;
         if(numberOfSources !== 1) {
             console.warn(`Model should have exactly one source vertex. Instead found ${numberOfSources} of them.`);
-            return false;
-        }
-        const numberOfDrains = this.verteces.filter(vertex => vertex.constructor.name === 'Drain').length;
-        if(numberOfDrains !== 1) {
-            console.warn(`Model should have exactly one drain vertex. Instead found ${numberOfDrains} of them.`);
             return false;
         }
         return true;

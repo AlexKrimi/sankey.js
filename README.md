@@ -10,8 +10,8 @@ Diagrams that are supported can be characterized with following properties.
 | ✅ Yes | Planar graphs  | "Planar drawings (or embeddings) make clear the structure of a given graph by eliminating crossing edges, which can be confused as additional vertices. Graphs defined by road networks, printed circuit board layouts, and the like are inherently planar because they are completely defined by surface structures." <sup>[1]</sup> |
 | ✅ Yes | Directed graph  | Graph should be directed. |
 | ✅ Yes | Acyclic graph  | Graph should be acyclic (e.g. no feedback loops, no material refinement loops). |
-| ❌ No | More than one entry point (i.e. source)?  | There should be only one entry point. Layouting algorithm will use it starting point. |
-| ❌ No | More than one exit points (i.e. drains)?  | There should be only one drain point. Framework does not currently support this but it can be easily upgraded. |
+| ✅ Yes | More than one exit points (i.e. drains)?  | There can be any number of exit point since those nodes are handled just as any other node with exception to the source node.|
+| ❌ No | More than one entry point (i.e. source)?  | There must be only one entry point. Layouting algorithm will use it as a starting point. |
 | ❌ No | Orthogonal polyline drawings  | "Orthogonal means that all lines must be drawn either horizontal or vertical, with no intermediate slopes. Polyline means that each graph edge is represented by a chain of straight-line segments, connected by vertices or bends."<sup>[2]</sup>.  Nodes can be connected only using relatively straight line that bends as it gets closer to the nodes (implemented using B-spline).  |
 
 [1] _Skiena, Steven S. “15.12 Planarity Detection and Embedding.” [The Algorithm Design Manual](https://www.goodreads.com/book/show/425208), Springer, 2012, pp. 520–522._

@@ -29,7 +29,8 @@ export default function (){
         buffer2 = new BufferEntity('80%', sankey.EfficiencyLevel.Medium),
         buffer3 = new BufferEntity('50%', sankey.EfficiencyLevel.High);
 
-    [source, drain, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, buffer1, buffer2, buffer3]
+    modelManager.AddVertex(source, true);
+    [drain, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, buffer1, buffer2, buffer3]
     .forEach(vertex => modelManager.AddVertex(vertex));
 
     [
