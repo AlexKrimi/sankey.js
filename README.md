@@ -19,7 +19,11 @@ Diagrams that are supported can be characterized with following properties.
 [2] _Skiena, Steven S. “15.10 Drawing Graphs Nicely.” [The Algorithm Design Manual](https://www.goodreads.com/book/show/425208), Springer, 2012, pp. 513–516._
 
 ## Features
-<img src="readme-resources/vertical-distribution-top.svg" alt="Screenshot" width="100"/>
+| | Description |
+| --- | --- |
+| <img src="readme-resources/vertical-distribution-top.svg" alt="Screenshot" width="150"/> <img src="readme-resources/vertical-distribution-center.svg" alt="Screenshot" width="150"/> | Distribute vertically to the top or center. |
+| <img src="readme-resources/Asset 3.svg" alt="Screenshot" width="100"/> <img src="readme-resources/Asset 4.svg" alt="Screenshot" width="100"/> | Align to other elements in the same column by left or center. |
+| <img src="readme-resources/Asset 5.svg" alt="Screenshot" width="200"/> | Adjust margines among elements and window. |
 
 ## Very general technical information
 
