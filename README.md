@@ -38,5 +38,5 @@ Diagrams that are supported can be characterized with following properties.
 3. Solution uses [webpack](https://webpack.js.org/)
 
 # Usage and Implementation details
-For usage and implementation details have a look at projects [📖 Wiki page](https://github.com/MiroslavJelaska/plv.js/wiki/1.-Home).
+For usage and implementation details have a look at projects [📖 Wiki page](https://github.com/MiroslavJelaska/sankey.js/wiki).
 
