@@ -1,3 +1,4 @@
+![JavaScript ES6](https://img.shields.io/badge/JavaScript-ES6%2B-yellow.svg)
 # sankey.js
 JavaScript framework for creating Sankey diagrams with custom graphics.
 <img src="readme-resources/screenshot.png" alt="Screenshot" width="100%"/>
