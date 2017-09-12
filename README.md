@@ -21,9 +21,12 @@ Diagrams that are supported can be characterized with following properties.
 ## Features
 | | Description |
 | --- | --- |
-| <img src="readme-resources/vertical-distribution-top.svg" alt="Screenshot" width="150"/> <img src="readme-resources/vertical-distribution-center.svg" alt="Screenshot" width="150"/> | Distribute vertically to the top or center. |
-| <img src="readme-resources/Asset 3.svg" alt="Screenshot" width="100"/> <img src="readme-resources/Asset 4.svg" alt="Screenshot" width="100"/> | Align to other elements in the same column by left or center. |
-| <img src="readme-resources/Asset 5.svg" alt="Screenshot" width="200"/> | Adjust margines among elements and window. |
+| <img src="readme-resources/from-model-to-layout-preview.svg" alt="Screenshot" width="200"/> | Create model and let sanky.js do the layouting. |
+| <img src="readme-resources/vertical-distribution-top-preview.svg" alt="Screenshot" width="150"/> <img src="readme-resources/vertical-distribution-center-preview.svg" alt="Screenshot" width="150"/> | Distribute vertically to the top or center. |
+| <img src="readme-resources/column-alignment-left-preview.svg" alt="Screenshot" width="100"/> <img src="readme-resources/column-alignment-center-preview.svg" alt="Screenshot" width="100"/> | Align to other elements in the same column by left or center. |
+| <img src="readme-resources/margines-preview.svg" alt="Screenshot" width="200"/> | Adjust margines among elements and window. |
+| <img src="readme-resources/custom-shapes.svg" alt="Screenshot" width="200"/> | Use custom SVG shapes for nodes. Shape can be picked based on type and property values (in our example it is efficiency level). |
+| <img src="readme-resources/two-colored-gradients.svg" alt="Screenshot" width="200"/> | Links can either be monochromatic or use custom two colored gradients along the stroke. |
 
 ## Very general technical information
 
