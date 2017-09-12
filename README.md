@@ -19,6 +19,7 @@ Diagrams that are supported can be characterized with following properties.
 [2] _Skiena, Steven S. “15.10 Drawing Graphs Nicely.” [The Algorithm Design Manual](https://www.goodreads.com/book/show/425208), Springer, 2012, pp. 513–516._
 
 ## Features
+<img src="readme-resources/vertical-distribution-top.svg" alt="Screenshot" width="100"/>
 
 ## Very general technical information
 

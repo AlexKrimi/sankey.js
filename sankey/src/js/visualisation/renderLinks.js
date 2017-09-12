@@ -16,7 +16,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
         const allShapes =
             layoutedShapes
             .reduce(
-                (aggregate, current) => !!current ? aggregate.concat(current) : aggregate,
+                (aggregate, current) => current ? aggregate.concat(current) : aggregate,
                 []
             )
             .filter(shape => !!shape);
