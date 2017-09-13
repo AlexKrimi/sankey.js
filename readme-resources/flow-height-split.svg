@@ -1,13 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="307.44" height="139.5" viewBox="0 0 307.44 139.5">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="307.44" height="139.5" viewBox="0 0 307.44 139.5">
+  <defs>
+    <linearGradient id="linear-gradient" x1="266.41" y1="62.5" x2="186.41" y2="62.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#42a1ba"/>
+      <stop offset="1" stop-color="#2cc1f0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="266.41" y1="43.25" x2="186.41" y2="43.25" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-3" x1="266.41" y1="29.75" x2="186.41" y2="29.75" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-4" x1="266.41" y1="97.25" x2="186.41" y2="97.25" xlink:href="#linear-gradient"/>
+  </defs>
   <title>flow-height-split</title>
   <g style="isolation: isolate">
     <g id="Layer_2" data-name="Layer 2">
       <g id="Layer_1-2" data-name="Layer 1">
-        <path d="M186.41,48c40,0,40,29,80,29" style="fill: none;stroke: #2cc1f0;stroke-miterlimit: 10;stroke-width: 15px"/>
-        <path d="M186.41,37c40,0,40,12.5,80,12.5" style="fill: none;stroke: #2cc1f0;stroke-miterlimit: 10;stroke-width: 7.5px"/>
-        <path d="M186.41,29.5c40,0,40,.5,80,.5" style="fill: none;stroke: #2cc1f0;stroke-miterlimit: 10;stroke-width: 7.5px"/>
+        <path d="M186.41,48c40,0,40,29,80,29" style="fill: none;stroke-miterlimit: 10;stroke-width: 15px;stroke: url(#linear-gradient)"/>
+        <path d="M186.41,37c40,0,40,12.5,80,12.5" style="fill: none;stroke-miterlimit: 10;stroke-width: 7.5px;stroke: url(#linear-gradient-2)"/>
+        <path d="M186.41,29.5c40,0,40,.5,80,.5" style="fill: none;stroke-miterlimit: 10;stroke-width: 7.5px;stroke: url(#linear-gradient-3)"/>
         <rect x="86.41" width="100" height="100" rx="2" ry="2" style="fill: #9b9da0"/>
-        <path d="M186.41,65c40,0,40,64.5,80,64.5" style="fill: none;stroke: #2cc1f0;stroke-miterlimit: 10;stroke-width: 20px"/>
+        <path d="M186.41,65c40,0,40,64.5,80,64.5" style="fill: none;stroke-miterlimit: 10;stroke-width: 20px;stroke: url(#linear-gradient-4)"/>
         <g style="opacity: 0.6000000000000001">
           <g style="opacity: 0.30000000000000004;mix-blend-mode: multiply">
             <text transform="translate(124.7 61.9)" style="font-size: 37.295188903808594px;font-family: Roboto-Black, Roboto">A</text>
