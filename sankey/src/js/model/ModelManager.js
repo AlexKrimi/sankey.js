@@ -54,6 +54,12 @@ export default class ModelManager {
         this.edges.push(new Edge(newFrom, newTo, newIntensity));
     }
 
+    AddEdges(vertexTriplets){
+        vertexTriplets.forEach(function(newVertexTuple) {
+            this.AddEdge(newVertexTuple);
+        }, this);
+    }
+
     GetOutgoingEdge(vertexId){
         return this.edges.filter(edge => edge.from.id === vertexId);
     }
@@ -65,12 +71,6 @@ export default class ModelManager {
     }
     GetIncomingVertex(vertexId){
         return this.GetIncomingEdge(vertexId).map(edge => edge.from);
-    }
-
-    AddEdges(newVertexTuples){
-        newVertexTuples.forEach(function(newVertexTuple) {
-            this.AddEdge(newVertexTuple);
-        }, this);
     }
 
     AddVertecesAndEdges(vertecesAndOutgoingFlowsCollection){
