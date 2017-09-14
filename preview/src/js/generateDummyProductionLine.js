@@ -33,7 +33,7 @@ export default function (){
     [drain, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, buffer1, buffer2, buffer3]
     .forEach(vertex => modelManager.AddVertex(vertex));
 
-    [
+    const edges = [
         [source, s1, 1.0],
         [s1, s2, 1.0],
         [s2, buffer1, 1.0],
@@ -57,7 +57,9 @@ export default function (){
         [buffer3, s12, 0.30],
         [s12, s13, 0.30],
         [s13, drain, 0.30],
-    ].forEach(edge =>  modelManager.AddEdge(edge));
+    ];
+
+    modelManager.AddEdges(edges);
 
     return modelManager;
 }
