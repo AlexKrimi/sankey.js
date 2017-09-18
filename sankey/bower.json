@@ -26,5 +26,8 @@
     "Miroslav Jelaska <jelaska.miro@gmail.com>"
   ],
   "dependencies": {
+    "d3": "^4.10.2",
+    "js-enumeration": "^0.2.4",
+    "lodash": "^4.17.4"
   }
 }
