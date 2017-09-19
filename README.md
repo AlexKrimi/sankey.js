@@ -41,3 +41,7 @@ Diagrams that are supported can be characterized with following properties.
 # Usage and Implementation details
 For usage and implementation details have a look at projects [📖 Wiki page](https://github.com/MiroslavJelaska/sankey.js/wiki).
 
+# Contact
+Have some questions or want to give a feedback? You can send me a <a href="mailto:mjelaska.public@gmail.com">an email ✉️</a>
+
+Do you like it? Show it by giving a ⭐️. 🚀
