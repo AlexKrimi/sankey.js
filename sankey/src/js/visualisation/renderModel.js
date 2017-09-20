@@ -7,17 +7,18 @@ import renderLinks from './renderLinks.js';
 import renderGradients from './renderGradients.js';
 import renderShapes from '../visualisation/renderShapes.js';
 
-export default function renderModel(productionLineModel, canvas, options){
-    productionLineModel.IsValid();
-    const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(productionLineModel);
+export default function renderModel(model, canvas, options){
+    if(!model.IsValid())
+        throw new Error('Model not valid.');
+
+    const columnPartitions = fromProductionModelToColumnPartitionsForVisualization(model);
     const transposedColumnPartitions = transposeMatrix(columnPartitions);
     let columnPartitionsWithShapes = mapEntityPartitionsToShapePartitions(transposedColumnPartitions, options);
-    columnPartitionsWithShapes = getNormalizedPartitions(columnPartitionsWithShapes, productionLineModel);
+    columnPartitionsWithShapes = getNormalizedPartitions(columnPartitionsWithShapes, model);
     applyLayout(options, columnPartitionsWithShapes);
-    renderLinks(productionLineModel, columnPartitionsWithShapes, canvas, options);
 
+    renderLinks(model, columnPartitionsWithShapes, canvas, options);
     if(!options.link.color)
         renderGradients(canvas, options);
-
     renderShapes(columnPartitionsWithShapes, canvas);
 }
