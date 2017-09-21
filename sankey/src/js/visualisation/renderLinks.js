@@ -27,12 +27,12 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
         const positionOfLeftFlows = getPositionOfFlowsBySide(Side.left);
         const positionOfRightFlows = getPositionOfFlowsBySide(Side.right);
         for(let edgeData of [...linkDescriptionGenerator(productionLine, positionOfLeftFlows, positionOfRightFlows)]){
-            const lengthOfStraightPart = edgeData.distanceBetweenBounds * 0.20;
+            const controlPointXOffset = edgeData.distanceBetweenBounds * 0.20;
 
             const lineData = [
                 { x: edgeData.from.x,                        y: edgeData.from.y },
-                { x: edgeData.from.x + lengthOfStraightPart, y: edgeData.from.y },
-                { x: edgeData.to.x   - lengthOfStraightPart, y: edgeData.to.y },
+                { x: edgeData.from.x + controlPointXOffset,  y: edgeData.from.y },
+                { x: edgeData.to.x   - controlPointXOffset,  y: edgeData.to.y },
                 { x: edgeData.to.x,                          y: edgeData.to.y }
             ];
 
@@ -88,8 +88,8 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
         }
     }
 
-    function* positionForFlowsGenerator(groupOfLinksWithCommonLeftVertex, xGenerator, yGenerator){
-        for(let edge of groupOfLinksWithCommonLeftVertex){
+    function* positionForFlowsGenerator(groupOfLinksWithCommonVertex, xGenerator, yGenerator){
+        for(let edge of groupOfLinksWithCommonVertex){
             const x = xGenerator.next();
             const y = yGenerator.next();
             const isDone = x.done || y.done;
