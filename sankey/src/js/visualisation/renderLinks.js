@@ -56,6 +56,20 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
         }
     }
 
+    function getPositionOfFlowsBySide(side){
+        return _(getUniqVertexIdsByLinkHandSide(side))
+        .map(function(vertexId){
+            const groupOfLinksWithCommonSideOfVertex = getLinksGroupedByVertexSide(productionLine, side)[vertexId];
+            const fromShapeBounds = findShapeById(vertexId).GetBoundingBox();
+            const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * options.link.maxWidth + aggregate, 0);
+            const xGenerator = xPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, side);
+            const yGenerator = yPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, totalFlowWidth);
+            return [...positionForFlowsGenerator(groupOfLinksWithCommonSideOfVertex, xGenerator, yGenerator)];
+        })
+        .flatten()
+        .value();
+    }
+
     function getUniqVertexIdsByLinkHandSide(side){
         const edgeSide = ({
             [Side.left]: 'from',
@@ -68,6 +82,15 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             .value();
     }
 
+    function getLinksGroupedByVertexSide(productionLine, side){
+        const predicate =
+        (side === Side.left)
+        ? edge => edge.from.id
+        : edge => edge.to.id;
+        
+        return _.groupBy(productionLine.edges, predicate);
+    }
+
     function* xPositionGenerator(groupOfLinksWithCommonSideOfVertex, shapeBounds, side){
         const x =
             side === Side.left
@@ -78,7 +101,6 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             yield x;
         }
     }
-
     function* yPositionGenerator(groupOfLinksWithCommonSideOfVertex, shapeBounds, totalFlowWidth){
         let y =  shapeBounds.y1 + (shapeBounds.y2 - shapeBounds.y1 - totalFlowWidth) / 2;
         for(let edge of groupOfLinksWithCommonSideOfVertex){
@@ -87,22 +109,15 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             y = y + currentFlowWidth;
         }
     }
-
     function* positionForFlowsGenerator(groupOfLinksWithCommonVertex, xGenerator, yGenerator){
         for(let edge of groupOfLinksWithCommonVertex){
             const x = xGenerator.next();
             const y = yGenerator.next();
-            const isDone = x.done || y.done;
-            const position = {
+            yield {
                 id: edge.id,
                 x: x.value,
                 y: y.value,
             };
-
-            if(isDone)
-                return position;
-            else
-                yield position;
         }
     };
 
@@ -115,7 +130,7 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
                 intensity: edge.intensity,
                 width: edge.intensity * options.link.maxWidth,
                 distanceBetweenBounds: rightPosition.x - leftPosition.x,
-
+                
                 from:{
                     ...leftPosition,
                     efficiencyLevel: edge.from.efficiencyLevel
@@ -127,27 +142,4 @@ export default function renderLinks(productionLine, layoutedShapes, canvas, opti
             };
         }
     };
-
-    function getLinksGroupedByVertexSide(productionLine, side){
-        const predicate =
-            (side === Side.left)
-            ? edge => edge.from.id
-            : edge => edge.to.id;
-
-        return _.groupBy(productionLine.edges, predicate);
-    }
-
-    function getPositionOfFlowsBySide(side){
-        return _(getUniqVertexIdsByLinkHandSide(side))
-            .map(function(vertexId){
-                const groupOfLinksWithCommonSideOfVertex = getLinksGroupedByVertexSide(productionLine, side)[vertexId];
-                const fromShapeBounds = findShapeById(vertexId).GetBoundingBox();
-                const totalFlowWidth = groupOfLinksWithCommonSideOfVertex.reduce((aggregate, edge) => edge.intensity * options.link.maxWidth + aggregate, 0);
-                const xGenerator = xPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, side);
-                const yGenerator = yPositionGenerator(groupOfLinksWithCommonSideOfVertex, fromShapeBounds, totalFlowWidth);
-                return [...positionForFlowsGenerator(groupOfLinksWithCommonSideOfVertex, xGenerator, yGenerator)];
-            })
-            .flatten()
-            .value();
-    }
 }
