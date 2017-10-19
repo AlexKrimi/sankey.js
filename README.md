@@ -41,6 +41,8 @@ Diagrams that are supported can be characterized with following properties.
 # Usage and Implementation details
 For usage and implementation details have a look at projects [📖 Wiki page](https://github.com/MiroslavJelaska/sankey.js/wiki).
 
+Slides that I've used for presentation at Fraunhofer IWU on date 2017-09-21: [sankey.js [2017-09-21].pptx](https://drive.google.com/open?id=0B1VNarEh1cXAZnNUTUprdDMzbEU).
+
 # Contact
 Have some questions or want to give a feedback? You can send me a <a href="mailto:mjelaska.public@gmail.com">an email ✉️</a>
 
